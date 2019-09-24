@@ -1,7 +1,9 @@
 // @flow
 
 const crypto = require('crypto');
+const querystring = require('querystring');
 const R = require('ramda');
+const axios = require('axios');
 const KeycloakAdmin = require('keycloak-admin').default;
 const KeycloakConfig = require('keycloak-connect/middleware/auth-utils/config');
 const KeycloakGrantManager = require('../lib/keycloak-grant-manager');
@@ -19,17 +21,19 @@ const lagoonKeycloakRoute = R.compose(
   R.propOr('', 'LAGOON_ROUTES'),
 )(process.env);
 
+const lagoonKeycloakApiSecret = R.propOr(
+  'no-client-secret-configured',
+  'KEYCLOAK_API_CLIENT_SECRET',
+  process.env,
+);
+
 const config = new KeycloakConfig({
   authServerUrl: `${lagoonKeycloakRoute}/auth`,
   realm: 'lagoon',
   clientId: 'api',
   bearerOnly: true,
   credentials: {
-    secret: R.propOr(
-      'no-client-secret-configured',
-      'KEYCLOAK_API_CLIENT_SECRET',
-      process.env,
-    ),
+    secret: lagoonKeycloakApiSecret,
   },
 });
 
@@ -96,7 +100,31 @@ keycloakGrantManager.validateToken = function validateToken(token, expectedType)
   });
 };
 
+const impersonateUser = async (userId /* :string */) => {
+  try {
+    const data = {
+      grant_type: 'urn:ietf:params:oauth:grant-type:token-exchange',
+      client_id: 'api',
+      client_secret: lagoonKeycloakApiSecret,
+      requested_subject: userId,
+    };
+
+    const response = await axios.post(
+      `${lagoonKeycloakRoute}/auth/realms/lagoon/protocol/openid-connect/token`,
+      querystring.stringify(data),
+    );
+
+    return response.data;
+  } catch (err) {
+    if (err.response) {
+      const msg = R.pathOr('Unknown error', ['response', 'data', 'error_description'], err);
+      throw new Error(`Could not get impersonate user ${userId}: ${msg}`);
+    }
+  }
+};
+
 module.exports = {
   keycloakAdminClient,
   keycloakGrantManager,
+  impersonateUser,
 };

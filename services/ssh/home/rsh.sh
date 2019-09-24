@@ -32,7 +32,7 @@ fi
 ##
 ## Check if this user has access to this OpenShift project by using an API token of that user
 ##
-TOKEN=$(./token.sh "$API_ADMIN_TOKEN" "$USER_SSH_KEY")
+TOKEN=${LAGOON_TOKEN:=$(./token.sh "$API_ADMIN_TOKEN" "$USER_SSH_KEY")}
 BEARER="Authorization: bearer $TOKEN"
 GRAPHQL="query userCanSshToEnvironment {
   userCanSshToEnvironment(openshiftProjectName: \"$PROJECT\") {

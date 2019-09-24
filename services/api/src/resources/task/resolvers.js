@@ -1,24 +1,28 @@
 // @flow
 
+
 const R = require('ramda');
 const getFieldNames = require('graphql-list-fields');
+const {
+  impersonateUser,
+} = require('../../clients/keycloakClient');
 const {
   pubSub,
   createEnvironmentFilteredSubscriber,
 } = require('../../clients/pubSub');
 const {
   knex,
-  ifNotAdmin,
-  inClauseOr,
   prepare,
   query,
   isPatchEmpty,
 } = require('../../util/db');
+const logger = require('../../logger');
 const Sql = require('./sql');
 const EVENTS = require('./events');
 const Helpers = require('./helpers');
 const environmentHelpers = require('../environment/helpers');
 const envValidators = require('../environment/validators');
+const projectHelpers = require('../project/helpers');
 
 /* ::
 
@@ -353,7 +357,7 @@ const taskDrushSqlSync = async (
     sourceEnvironment: sourceEnvironmentId,
     destinationEnvironment: destinationEnvironmentId,
   },
-  { sqlClient, hasPermission },
+  { sqlClient, dataSources, hasPermission },
 ) => {
   await envValidators(sqlClient).environmentExists(sourceEnvironmentId);
   await envValidators(sqlClient).environmentExists(destinationEnvironmentId);
@@ -380,12 +384,25 @@ const taskDrushSqlSync = async (
     project: destinationEnvironment.project,
   });
 
+  // Attempt to run the task as the source projects default maintainer user
+  let lagoonToken;
+  try {
+    const sourceProject = await projectHelpers(sqlClient).getProjectById(sourceEnvironment.project);
+    const maintainerUser = await Helpers(sqlClient, dataSources.UserModel, dataSources.GroupModel).getProjectMaintainer(sourceProject.name);
+    const grant = await impersonateUser(maintainerUser.id);
+    lagoonToken = grant.access_token;
+  } catch (err) {
+    logger.error(`Could not impersonate default maintainer for project ${sourceEnvironment.project}: ${err}`);
+    lagoonToken = null;
+  }
+
   const taskData = await Helpers(sqlClient).addTask({
     name: `Sync DB ${sourceEnvironment.name} -> ${destinationEnvironment.name}`,
     environment: destinationEnvironmentId,
     service: 'cli',
     command: `drush -y sql-sync @${sourceEnvironment.name} @self`,
     execute: true,
+    lagoonToken,
   });
 
   return taskData;
@@ -397,7 +414,7 @@ const taskDrushRsyncFiles = async (
     sourceEnvironment: sourceEnvironmentId,
     destinationEnvironment: destinationEnvironmentId,
   },
-  { sqlClient, hasPermission },
+  { sqlClient, dataSources, hasPermission },
 ) => {
   await envValidators(sqlClient).environmentExists(sourceEnvironmentId);
   await envValidators(sqlClient).environmentExists(destinationEnvironmentId);
@@ -424,6 +441,18 @@ const taskDrushRsyncFiles = async (
     project: destinationEnvironment.project,
   });
 
+  // Attempt to run the task as the source projects default maintainer user
+  let lagoonToken;
+  try {
+    const sourceProject = await projectHelpers(sqlClient).getProjectById(sourceEnvironment.project);
+    const maintainerUser = await Helpers(sqlClient, dataSources.UserModel, dataSources.GroupModel).getProjectMaintainer(sourceProject.name);
+    const grant = await impersonateUser(maintainerUser.id);
+    lagoonToken = grant.access_token;
+  } catch (err) {
+    logger.error(`Could not impersonate default maintainer for project ${sourceEnvironment.project}: ${err}`);
+    lagoonToken = null;
+  }
+
   const taskData = await Helpers(sqlClient).addTask({
     name: `Sync files ${sourceEnvironment.name} -> ${
       destinationEnvironment.name
@@ -432,6 +461,7 @@ const taskDrushRsyncFiles = async (
     service: 'cli',
     command: `drush -y rsync @${sourceEnvironment.name}:%files @self:%files`,
     execute: true,
+    lagoonToken,
   });
 
   return taskData;

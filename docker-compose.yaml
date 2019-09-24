@@ -7,6 +7,8 @@ services:
       - ./services/api-db/rerun_initdb.sh:/rerun_initdb.sh
     ports:
       - '3306:3306'
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: mariadb
       lagoon.image: amazeeiolagoon/api-db:v1-0-0
@@ -22,6 +24,7 @@ services:
       - API_HOST=api
       - API_PROTOCOL=http
       - API_PORT=3000
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: none
     depends_on:
@@ -34,6 +37,8 @@ services:
     volumes:
       - ./services/webhook-handler/src:/app/services/webhook-handler/src
       - ./node-packages:/app/node-packages:delegated
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/webhook-handler/.lagoon.app.yml
@@ -43,6 +48,8 @@ services:
     ports:
       - '15672:15672'
       - '5672:5672'
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: rabbitmq-cluster
       lagoon.template: services/broker/.lagoon.app.yml
@@ -53,6 +60,8 @@ services:
     volumes:
       - ./services/openshiftremove/src:/app/services/openshiftremove/src
       - ./node-packages:/app/node-packages:delegated
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/openshiftremove/.lagoon.app.yml
@@ -62,6 +71,7 @@ services:
     command: yarn run dev
     environment:
       - CI=${CI:-true}
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     volumes:
       - ./services/openshiftbuilddeploy/src:/app/services/openshiftbuilddeploy/src
       - ./node-packages:/app/node-packages:delegated
@@ -79,6 +89,7 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-XXXXXXXXXXXXXXXXXXXX}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-xxxxxxxxxxxxxxxxxxxx}
       - AWS_BUCKET=${AWS_BUCKET:-aws-bucket}
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/openshiftbuilddeploymonitor/.lagoon.app.yml
@@ -93,6 +104,7 @@ services:
       # Gateway IP in virtualbox, so pods running in minishift can connect to
       # docker-for-mac containers.
       - LAGOON_SSH_HOST=10.0.2.2
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/openshiftjobs/.lagoon.app.yml
@@ -103,6 +115,8 @@ services:
     volumes:
       - ./services/openshiftjobsmonitor/src:/app/services/openshiftjobsmonitor/src
       - ./node-packages:/app/node-packages:delegated
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/openshiftjobsmonitor/.lagoon.app.yml
@@ -113,6 +127,8 @@ services:
     volumes:
       - ./services/openshiftmisc/src:/app/services/openshiftmisc/src
       - ./node-packages:/app/node-packages:delegated
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/openshiftmisc/.lagoon.app.yml
@@ -123,6 +139,8 @@ services:
     volumes:
       - ./services/logs2rocketchat/src:/app/services/logs2rocketchat/src
       - ./node-packages:/app/node-packages:delegated
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/logs2rocketchat/.lagoon.app.yml
@@ -133,6 +151,8 @@ services:
     volumes:
       - ./services/logs2slack/src:/app/services/logs2slack/src
       - ./node-packages:/app/node-packages:delegated
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/logs2slack/.lagoon.app.yml
@@ -143,6 +163,8 @@ services:
     volumes:
       - ./services/webhooks2tasks/src:/app/services/webhooks2tasks/src
       - ./node-packages:/app/node-packages:delegated
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/webhooks2tasks/.lagoon.app.yml
@@ -155,6 +177,8 @@ services:
       - ./node-packages:/app/node-packages:delegated
     ports:
       - '5555:3000'
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/rest2tasks/.lagoon.app.yml
@@ -164,6 +188,7 @@ services:
     command: yarn run dev
     environment:
       - KEYCLOAK_API_CLIENT_SECRET=39d5282d-3684-4026-b4ed-04bbc034b61a
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     volumes:
       - ./services/api/src:/app/services/api/src
       - ./node-packages:/app/node-packages:delegated
@@ -185,6 +210,8 @@ services:
       - ./services/ui/.env.defaults:/app/services/ui/.env.defaults
       - ./services/ui/.env.schema:/app/services/ui/.env.schema
       - ./services/ui/package.json:/app/services/ui/package.json
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     ports:
       - '8888:3000'
     labels:
@@ -206,6 +233,7 @@ services:
     #   - "/etc/ssh/sshd_config"
     environment:
       - OPENSHIFT_CONSOLE_URL=https://192.168.99.100:8443
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     user: '111111111'
     volumes:
       - ./services/ssh/home/command.sh:/home/command.sh
@@ -221,6 +249,7 @@ services:
       - JWTISSUER=auth-server.dev
       - JWTAUDIENCE=api.dev
       - KEYCLOAK_AUTH_SERVER_CLIENT_SECRET=f605b150-7636-4447-abd3-70988786b330
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     volumes:
       - ./services/auth-server/src:/app/services/auth-server/src
     user: '111111111'
@@ -237,6 +266,8 @@ services:
       - keycloak-db
     ports:
       - '8088:8080'
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/keycloak/.lagoon.app.yml
@@ -245,6 +276,8 @@ services:
     image: ${IMAGE_REPO:-lagoon}/keycloak-db
     ports:
       - '3336:3306'
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: mariadb
       lagoon.image: amazeeiolagoon/keycloak-db:v1-0-0
@@ -267,6 +300,7 @@ services:
       - API_PROTOCOL=http
       - API_PORT=3000
       - KEYCLOAK_AUTH_SERVER_CLIENT_SECRET=f605b150-7636-4447-abd3-70988786b330
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     volumes:
       - ./tests:/ansible
     labels:
@@ -275,6 +309,7 @@ services:
     image: ${IMAGE_REPO:-lagoon}/local-git
     environment:
       - GIT_AUTHORIZED_KEYS=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDEZlms5XsiyWjmnnUyhpt93VgHypse9Bl8kNkmZJTiM3Ex/wZAfwogzqd2LrTEiIOWSH1HnQazR+Cc9oHCmMyNxRrLkS/MEl0yZ38Q+GDfn37h/llCIZNVoHlSgYkqD0MQrhfGL5AulDUKIle93dA6qdCUlnZZjDPiR0vEXR36xGuX7QYAhK30aD2SrrBruTtFGvj87IP/0OEOvUZe8dcU9G/pCoqrTzgKqJRpqs/s5xtkqLkTIyR/SzzplO21A+pCKNax6csDDq3snS8zfx6iM8MwVfh8nvBW9seax1zBvZjHAPSTsjzmZXm4z32/ujAn/RhIkZw3ZgRKrxzryttGnWJJ8OFyF31JTJgwWWuPdH53G15PC83ZbmEgSV3win51RZRVppN4uQUuaqZWG9wwk2a6P5aen1RLCSLpTkd2mAEk9PlgmJrf8vITkiU9pF9n68ENCoo556qSdxW2pxnjrzKVPSqmqO1Xg5K4LOX4/9N4n4qkLEOiqnzzJClhFif3O28RW86RPxERGdPT81UI0oDAcU5euQr8Emz+Hd+PY1115UIld3CIHib5PYL9Ee0bFUKiWpR/acSe1fHB64mCoHP7hjFepGsq7inkvg2651wUDKBshGltpNkMj6+aZedNc0/rKYyjl80nT8g8QECgOSRzpmYp0zli2HpFoLOiWw== ansible-testing
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     ports:
       - '2222:22'
     labels:
@@ -285,6 +320,7 @@ services:
     environment:
       - ADAPTER=
       - PORT=9090
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     ports:
       - '9090:9090'
     labels:
@@ -296,6 +332,8 @@ services:
     volumes:
       - ./local-dev/api-data:/api-data
       - ./local-dev/api-data-watcher-pusher:/home
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: none
   local-minio:
@@ -307,6 +345,7 @@ services:
     environment:
       - MINIO_ACCESS_KEY=minio
       - MINIO_SECRET_KEY=minio123
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: none
   drush-alias:
@@ -315,6 +354,8 @@ services:
       - ./services/drush-alias/web/aliases.drushrc.php.stub:/app/aliases.drushrc.php.stub
     ports:
       - '8087:8080'
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/drush-alias/.lagoon.app.yml
@@ -325,6 +366,7 @@ services:
     user: '111111111'
     environment:
       KEYCLOAK_URL: http://docker.for.mac.localhost:8088
+      LAGOON_LOCALDEV_HTTP_PORT: ""
     ports:
       - '9200:9200'
     labels:
@@ -334,6 +376,8 @@ services:
   logs-forwarder:
     image: ${IMAGE_REPO:-lagoon}/logs-forwarder
     user: '111111111'
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/logs-forwarder/.lagoon.single.yml
@@ -346,6 +390,7 @@ services:
     environment:
       KEYCLOAK_URL: http://docker.for.mac.localhost:8088
       LOGSDB_UI_URL: http://0.0.0.0:5601
+      LAGOON_LOCALDEV_HTTP_PORT: ""
     labels:
       lagoon.type: kibana
       lagoon.template: services/logs-db-ui/.lagoon.yml
@@ -353,6 +398,8 @@ services:
   logs-db-curator:
     image: ${IMAGE_REPO:-lagoon}/logs-db-curator
     user: '111111111'
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: cli
       lagoon.template: services/logs-db-curator/.lagoon.app.yml
@@ -369,6 +416,8 @@ services:
       - '5141:5141/udp'
     volumes:
       - './services/logs2logs-db/pipeline:/usr/share/logstash/pipeline'
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: logstash
       lagoon.template: services/logs2logs-db/.lagoon.yml
@@ -380,6 +429,8 @@ services:
       - './services/auto-idler/idle-services.sh:/idle-services.sh'
       - './services/auto-idler/idle-clis.sh:/idle-clis.sh'
       - './services/auto-idler/create_jwt.sh:/create_jwt.sh'
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/auto-idler/.lagoon.yml
@@ -389,12 +440,16 @@ services:
     user: '111111111'
     volumes:
       - './services/storage-calculator/calculate-storage.sh:/calculate-storage.sh'
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/storage-calculator/.lagoon.yml
       lagoon.image: amazeeiolagoon/storage-calculator:v1-0-0
   logs-collector:
     image: openshift/origin-logging-fluentd:v3.6.1
+    environment:
+      - LAGOON_LOCALDEV_HTTP_PORT=""
     labels:
       lagoon.type: custom
       lagoon.template: services/logs-collector/.lagoon.yml

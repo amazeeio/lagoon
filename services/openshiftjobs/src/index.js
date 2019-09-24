@@ -46,7 +46,7 @@ const failTask = async task => {
 }
 
 const messageConsumer = async msg => {
-  const { project, task, environment } = JSON.parse(msg.content.toString());
+  const { project, task, environment, lagoonToken } = JSON.parse(msg.content.toString());
 
   logger.verbose(
     `Received JobOpenshift task for project: ${project.name}, task: ${task.id}`
@@ -185,6 +185,10 @@ const messageConsumer = async msg => {
         name: 'TASK_DATA_ID',
         value: task.id,
       },
+      {
+        name: 'LAGOON_TOKEN',
+        value: lagoonToken,
+      }
     ]));
 
     const containerCommandLens = R.lensPath(['containers', 0, 'command']);

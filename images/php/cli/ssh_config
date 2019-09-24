@@ -1,4 +1,5 @@
 Host *
+  SendEnv LAGOON_TOKEN
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
   IdentityFile /home/.ssh/lagoon_cli.key

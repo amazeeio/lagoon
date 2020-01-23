@@ -26,33 +26,13 @@ describe('Sql', () => {
   });
 
   describe('selectNotificationsByTypeByProjectId', () => {
-    it('if user, should create statement for notification_slack table with IN clause', () => {
-      const cred = {
-        role: 'user',
-        permissions: { customers: [], projects: ['3'] },
-      };
-
+    it('should create a proper query', () => {
       const input = {
         type: 'slack',
         pid: 3,
       };
 
-      const ret = Sql.selectNotificationsByTypeByProjectId(cred, input);
-      expect(ret).toMatchSnapshot();
-    });
-
-    it('if admin, should create statement for notification_slack table without IN clause', () => {
-      const cred = {
-        role: 'admin',
-        permissions: {},
-      };
-
-      const input = {
-        type: 'slack',
-        pid: 3,
-      };
-
-      const ret = Sql.selectNotificationsByTypeByProjectId(cred, input);
+      const ret = Sql.selectNotificationsByTypeByProjectId(input);
       expect(ret).toMatchSnapshot();
     });
   });
@@ -87,22 +67,14 @@ describe('Sql', () => {
   });
 
   describe('deleteProjectNotification', () => {
-    it('if not admin, should insert IN clause for project', () => {
-      const cred = {
-        role: 'user',
-        permissions: {
-          customers: [],
-          projects: ['1'],
-        },
-      };
-
+    it('should create a proper query', () => {
       const input = {
         project: 'some_project',
         notificationType: 'slack',
         notificationName: 'some_slack',
       };
 
-      const ret = Sql.deleteProjectNotification(cred, input);
+      const ret = Sql.deleteProjectNotification(input);
       expect(ret).toMatchSnapshot();
     });
   });

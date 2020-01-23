@@ -23,6 +23,8 @@ RUN yarn check --verify-tree
 
 # Making sure we run in production
 ENV NODE_ENV=production \
+    JWTSECRET=super-secret-string \
+    JWTAUDIENCE=api.dev \
     LOGSDB_ADMIN_PASSWORD=admin \
     KEYCLOAK_ADMIN_PASSWORD=admin \
     ELASTICSEARCH_HOST=logs-db-service:9200 \

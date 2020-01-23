@@ -1,17 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Sql deleteProjectNotification if not admin, should insert IN clause for project 1`] = `"delete from \`project_notification\` as \`pn\` where \`pn\`.\`pid\` in ('1') and \`p\`.\`name\` = 'some_project' and \`nt\`.\`name\` = 'some_slack'"`;
+exports[`Sql deleteProjectNotification should create a proper query 1`] = `
+"DELETE pn
+      FROM project_notification as pn
+      LEFT JOIN \`notification_slack\` AS nt ON pn.nid = nt.id AND pn.type = 'slack'
+      LEFT JOIN project as p on pn.pid = p.id
+      WHERE p.name = 'some_project'
+      AND nt.name = 'some_slack'"
+`;
 
 exports[`Sql selectAssignedProjectNotificationByName should create proper statement 1`] = `"select \`nt\`.*, \`pn\`.*, 'slack' as type from \`project_notification\` as \`pn\` JOIN notification_slack AS nt ON pn.nid = nt.id AND pn.type = 'slack' where \`nt\`.\`name\` = 'slack_foo'"`;
 
 exports[`Sql selectCustomer should create a proper query 1`] = `"select * from \`notification_slack\` where \`name\` = 'n1'"`;
 
-exports[`Sql selectNotificationsByTypeByProjectId if admin, should create statement for notification_slack table without IN clause 1`] = `"select \`nt\`.*, \`pn\`.\`type\` from \`project_notification\` as \`pn\` JOIN notification_slack AS nt ON pn.nid = nt.id AND pn.type = 'slack' where \`pn\`.\`pid\` = 3"`;
-
-exports[`Sql selectNotificationsByTypeByProjectId if user, should create statement for notification_slack table with IN clause 1`] = `"select \`nt\`.*, \`pn\`.\`type\` from \`project_notification\` as \`pn\` JOIN notification_slack AS nt ON pn.nid = nt.id AND pn.type = 'slack' where \`pn\`.\`pid\` in ('3') and \`pn\`.\`pid\` = 3"`;
+exports[`Sql selectNotificationsByTypeByProjectId should create a proper query 1`] = `"select \`nt\`.*, \`pn\`.\`type\` from \`project_notification\` as \`pn\` JOIN notification_slack AS nt ON pn.nid = nt.id AND pn.type = 'slack' where \`pn\`.\`pid\` = 3"`;
 
 exports[`Sql selectProjectNotificationsWithoutAccess should create a proper statement 1`] = `"select \`pn\`.* from \`project_notification\` as \`pn\` inner join \`project\` as \`p\` on \`pn\`.\`pid\` = \`p\`.\`id\` where \`pn\`.\`nid\` in ('1') and \`pn\`.\`pid\` not in ('3', '4')"`;
 
 exports[`Sql selectUnassignedNotificationsByType should create a proper query 1`] = `"select \`nt\`.*, 'rocketchat' as type from \`notification_rocketchat\` as \`nt\` left join project_notification AS pn ON pn.nid = nt.id AND pn.type = 'rocketchat' where pn.nid IS NULL and pn.pid IS NULL"`;
 
-exports[`Sql updateNotificationSlack should create a proper query 1`] = `"update \`notification_slack\` set \`name\` = 'test', \`webhook\` = 'new-webhook' where \`name\` = 'n1'"`;
+exports[`Sql updateNotificationSlack should create a proper query 1`] = `"update \`notification_email\` set \`name\` = 'test', \`webhook\` = 'new-webhook' where \`name\` = 'n1'"`;

@@ -547,7 +547,8 @@ all-tests-list:=	features \
 									bitbucket \
 									rest \
 									nginx \
-									elasticsearch
+									elasticsearch \
+									api
 all-tests = $(foreach image,$(all-tests-list),tests/$(image))
 
 # Run all tests
@@ -607,6 +608,14 @@ $(run-webhook-tests): openshift build/node__6-builder build/node__8-builder buil
 		$(eval testname = $(subst tests/,,$@))
 		IMAGE_REPO=$(CI_BUILD_TAG) docker-compose -p $(CI_BUILD_TAG) run --rm tests ansible-playbook /ansible/tests/$(testname).yaml $(testparameter)
 
+# Define a list of which Lagoon Services are needed for running API testing
+api-test-services-main = keycloak-db keycloak api-db api local-api-data-watcher-pusher
+
+# Run the jest tests in the API container
+.PHONY: tests/api
+tests/api: $(foreach image,$(api-test-services-main),build/$(image))
+		IMAGE_REPO=$(CI_BUILD_TAG) docker-compose -p $(CI_BUILD_TAG) up -d $(api-test-services-main)
+		IMAGE_REPO=$(CI_BUILD_TAG) docker-compose -p $(CI_BUILD_TAG) exec -T api yarn test
 
 end2end-all-tests = $(foreach image,$(all-tests-list),end2end-tests/$(image))
 

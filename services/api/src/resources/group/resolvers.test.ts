@@ -6,9 +6,9 @@
     Example:
     $ yarn test resolvers --colors -t "#updateProject #availability"
 */
-import { promisify } from 'util';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { random } from 'faker';
+import { legacyAdminToken } from '../../tests/util';
 import {
   ADD_PROJECT,
   UPDATE_PROJECT,
@@ -25,8 +25,6 @@ import {
   DELETE_PROJECT,
   BILLING_GROUP_COST,
 } from './gql.test';
-
-const exec = promisify(require('child_process').exec);
 
 const fakeName = random.alphaNumeric;
 
@@ -51,7 +49,7 @@ type Group = {
 
 const defaultProject: Project = {
   name: 'PLACEHOLDER',
-  gitUrl: 'http://github.com',
+  gitUrl: 'http://github.com/amazeeio/lagoon.git',
   openshift: 1,
   productionEnvironment: 'master',
   availability: 'STANDARD',
@@ -70,20 +68,6 @@ const requestConfig = {
     Authorization: '',
     'content-type': 'application/json',
   },
-};
-
-const getJWTToken = async () => {
-  try {
-    const { stdout: jwtToken, stderr } = await exec(
-      'docker-compose exec -T auto-idler /create_jwt.sh',
-    );
-    if (stderr) {
-      throw stderr;
-    }
-    return jwtToken;
-  } catch (err) {
-    console.error(err);
-  }
 };
 
 let axiosInstance: AxiosInstance;
@@ -175,7 +159,7 @@ const cleanup = {
 describe('Billing Group Costs Related Queries & Mutation', () => {
   beforeAll(async () => {
     // GET JWT Token
-    const token = (await getJWTToken()).replace(/[\n\t\r]/g, '');
+    const token = (await legacyAdminToken()).replace(/[\n\t\r]/g, '');
     requestConfig.headers.Authorization = `Bearer ${token}`;
     axiosInstance = axios.create(requestConfig);
   });

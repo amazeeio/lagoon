@@ -6,7 +6,7 @@ const sha1 = require('sha1');
 const crypto = require('crypto');
 const moment = require('moment');
 const { logger } = require('@lagoon/commons/src/local-logging');
-const { getOpenShiftInfoForProject, addOrUpdateEnvironment, getEnvironmentByName, addDeployment } = require('@lagoon/commons/src/api');
+const { getOpenShiftInfoForProject, getOpenShiftInfoForProjectWithGroupEnvVars, addOrUpdateEnvironment, getEnvironmentByName, addDeployment } = require('@lagoon/commons/src/api');
 
 const { sendToLagoonLogs, initSendToLagoonLogs } = require('@lagoon/commons/src/logs');
 const { consumeTasks, initSendToLagoonTasks, createTaskMonitor } = require('@lagoon/commons/src/tasks');
@@ -42,7 +42,7 @@ const messageConsumer = async msg => {
 
   logger.verbose(`Received DeployKubernetes task for project: ${projectName}, environment: ${environmentName}, sha: ${sha}`);
 
-  const result = await getOpenShiftInfoForProject(projectName);
+  const result = await getOpenShiftInfoForProjectWithGroupEnvVars(projectName);
   const projectOpenShift = result.project
 
   try {

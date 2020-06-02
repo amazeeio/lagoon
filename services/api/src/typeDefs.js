@@ -152,6 +152,10 @@ const typeDefs = gql`
     groups: [GroupInterface]
     members: [GroupMembership]
     projects: [Project]
+    """
+    Environment variables available during build-time and run-time
+    """
+    envVariables: [EnvKeyValue]
   }
 
   type BillingGroup implements GroupInterface {
@@ -1049,6 +1053,14 @@ const typeDefs = gql`
     value: String!
   }
 
+  input GroupEnvVariableInput {
+    id: Int
+    group: GroupInput!
+    scope: EnvVariableScope
+    name: String!
+    value: String!
+  }
+
   input DeleteEnvVariableInput {
     id: Int!
   }
@@ -1316,6 +1328,7 @@ const typeDefs = gql`
     addRestore(input: AddRestoreInput!): Restore
     updateRestore(input: UpdateRestoreInput!): Restore
     addEnvVariable(input: EnvVariableInput!): EnvKeyValue
+    addEnvVariableToGroup(input: GroupEnvVariableInput!): EnvKeyValue
     deleteEnvVariable(input: DeleteEnvVariableInput!): String
     addTask(input: TaskInput!): Task
     taskDrushArchiveDump(environment: Int!): Task

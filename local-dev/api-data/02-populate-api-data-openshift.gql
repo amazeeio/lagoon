@@ -5,8 +5,8 @@ mutation PopulateApi {
     input: {
       id: 2
       name: "ci-local-openshift"
-      consoleUrl: "https://192.168.42.103:8443/"
-      routerPattern: "${project}.${branch}.192.168.42.103.xip.io"
+      consoleUrl: "https://192.168.42.121:8443/"
+      routerPattern: "${project}.${branch}.192.168.42.121.xip.io"
       projectUser: "developer"
       sshHost: "172.17.0.1"
       sshPort: "2020"
@@ -635,6 +635,18 @@ mutation PopulateApi {
     id
   }
 
+  CIFeaturesEnvVars8: addEnvVariableToGroup(
+    input: {
+      group: {
+        name:"ci-group"
+      }
+      scope:RUNTIME
+      name:"LAGOON_GROUP_VARIABLE_RUNTIME"
+      value:"ECE1E07BBD"
+    }
+  ) {
+    id
+  }
 
   CiFeaturesRocketChat: addNotificationToProject(
     input: {

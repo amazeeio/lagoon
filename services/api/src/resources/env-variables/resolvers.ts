@@ -1,17 +1,9 @@
-// @flow
-
-const R = require('ramda');
-const {
+import * as R from 'ramda';
+import {
   ifNotAdmin, inClauseOr, prepare, query,
-} = require('../../util/db');
-const Sql = require('./sql');
-const environmentHelpers = require('../environment/helpers');
-
-/* ::
-
-import type {ResolversObj} from '../';
-
-*/
+} from '../../util/db';
+import Sql from './sql';
+import environmentHelpers from '../environment/helpers';
 
 const envVarScopeToString = R.cond([
   [R.equals('GLOBAL'), R.toLower],
@@ -22,7 +14,7 @@ const envVarScopeToString = R.cond([
   [R.T, R.identity],
 ]);
 
-const getEnvVarsByProjectId = async (
+export const getEnvVarsByProjectId = async (
   { id: pid },
   args,
   {
@@ -49,7 +41,7 @@ const getEnvVarsByProjectId = async (
   return rows;
 };
 
-const getEnvVarsByEnvironmentId = async (
+export const getEnvVarsByEnvironmentId = async (
   { id: eid },
   args,
   {
@@ -79,7 +71,32 @@ const getEnvVarsByEnvironmentId = async (
   return rows;
 };
 
-const addEnvVariable = async (obj, args, context) => {
+export const getEnvVarsByGroupId = async (
+  { id: gid },
+  args,
+  {
+    sqlClient,
+    hasPermission,
+  },
+) => {
+  await hasPermission('env_var', 'group:view', {
+    group: gid,
+  });
+
+  const prep = prepare(
+    sqlClient,
+    `SELECT
+        ev.*
+      FROM env_vars ev
+      WHERE ev.group_id = :gid
+    `,
+  );
+
+  const results = await query(sqlClient, prep({ gid }))
+  return results;
+};
+
+export const addEnvVariable = async (obj, args, context) => {
   const {
     input: { type },
   } = args;
@@ -165,7 +182,45 @@ const addEnvVariableToEnvironment = async (
   return R.prop(0, rows);
 };
 
-const deleteEnvVariable = async (
+export const addEnvVariableToGroup = async (
+  root,
+  {
+    input: {
+      id, type, group: groupInput, name, value, scope: unformattedScope,
+    },
+  },
+  {
+    sqlClient,
+    hasPermission,
+    models,
+  },
+) => {
+  const group = await models.GroupModel.loadGroupByIdOrName(groupInput);
+  await hasPermission('env_var', 'group:add', {
+    group: group.id,
+  });
+
+  const scope = envVarScopeToString(unformattedScope);
+
+  const {
+    info: { insertId },
+  } = await query(
+    sqlClient,
+    Sql.insertEnvVariable({
+      id,
+      name,
+      value,
+      scope,
+      group: group.id,
+    }),
+  );
+
+  const rows = await query(sqlClient, Sql.selectEnvVariable(insertId));
+
+  return R.prop(0, rows);
+};
+
+export const deleteEnvVariable = async (
   root,
   { input: { id } },
   {
@@ -183,12 +238,3 @@ const deleteEnvVariable = async (
 
   return 'success';
 };
-
-const Resolvers /* : ResolversObj */ = {
-  getEnvVarsByProjectId,
-  getEnvVarsByEnvironmentId,
-  addEnvVariable,
-  deleteEnvVariable,
-};
-
-module.exports = Resolvers;

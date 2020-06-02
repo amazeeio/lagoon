@@ -946,6 +946,44 @@ const getOpenShiftInfoForProject = (project) =>
     }
 `);
 
+const getOpenShiftInfoForProjectWithGroupEnvVars = (project) =>
+  graphqlapi.query(`
+    {
+      project:projectByName(name: "${project}"){
+        id
+        openshift  {
+          name
+          consoleUrl
+          token
+          projectUser
+          routerPattern
+        }
+        gitUrl
+        privateKey
+        subfolder
+        openshiftProjectPattern
+        productionEnvironment
+        envVariables {
+          name
+          value
+          scope
+        }
+        groups {
+          id
+          name
+          ... on Group {
+            envVariables {
+              id
+              name
+              scope
+              value
+            }
+          }
+        }
+      }
+    }
+`);
+
 const getEnvironmentsForProject = (project) =>
   graphqlapi.query(`
   {
@@ -1211,6 +1249,7 @@ module.exports = {
   getEmailInfoForProject,
   getActiveSystemForProject,
   getOpenShiftInfoForProject,
+  getOpenShiftInfoForProjectWithGroupEnvVars,
   getEnvironmentByName,
   getProductionEnvironmentForProject,
   getEnvironmentsForProject,

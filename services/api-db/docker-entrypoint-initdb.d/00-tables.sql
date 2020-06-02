@@ -176,8 +176,10 @@ CREATE TABLE IF NOT EXISTS env_vars (
   scope       ENUM('global', 'build', 'runtime', 'container_registry', 'internal_container_registry') NOT NULL DEFAULT 'global',
   project     int NULL REFERENCES project (id),
   environment int NULL REFERENCES environent (id),
+  group_id    varchar(36),
   UNIQUE KEY `name_project` (`name`,`project`),
-  UNIQUE KEY `name_environment` (`name`,`environment`)
+  UNIQUE KEY `name_environment` (`name`,`environment`),
+  UNIQUE KEY `name_group_id` (`name`,`group_id`)
 );
 
 CREATE TABLE IF NOT EXISTS environment_service (

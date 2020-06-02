@@ -1,15 +1,7 @@
-// @flow
+import { knex } from '../../util/db';
 
-const { knex } = require('../../util/db');
-
-/* ::
-
-import type {SqlObj} from '../';
-
-*/
-
-const Sql /* : SqlObj */ = {
-  selectEnvVariable: (id /* : number */) =>
+const Sql = {
+  selectEnvVariable: (id: number) =>
     knex('env_vars')
       .select('id', 'name', 'value', 'scope')
       .where('id', '=', id)
@@ -22,14 +14,16 @@ const Sql /* : SqlObj */ = {
       scope,
       project,
       environment,
-    } /* : {
+      group,
+    }: {
     id: number,
     name: string,
     value: string,
     scope: string,
-    project: ?number,
-    environment: ?number,
-  } */,
+    project?: number,
+    environment?: number,
+    group?: string,
+  },
   ) =>
     knex('env_vars')
       .insert({
@@ -39,14 +33,15 @@ const Sql /* : SqlObj */ = {
         scope,
         project,
         environment,
+        group_id: group,
       })
       .toString(),
-  deleteEnvVariable: (id /* : number */) =>
+  deleteEnvVariable: (id: number) =>
     knex('env_vars')
       .where('id', id)
       .del()
       .toString(),
-  selectPermsForEnvVariable: (id /* : number */) =>
+  selectPermsForEnvVariable: (id: number) =>
     knex('env_vars')
       .select({ pid: 'project.id' })
       .leftJoin('environment', 'env_vars.environment', '=', 'environment.id')
@@ -59,4 +54,4 @@ const Sql /* : SqlObj */ = {
       .toString(),
 };
 
-module.exports = Sql;
+export default Sql;

@@ -7,7 +7,13 @@ const R = require('ramda');
 const sha1 = require('sha1');
 const crypto = require('crypto');
 const { logger } = require('@lagoon/commons/src/local-logging');
-const { getOpenShiftInfoForProject, addOrUpdateEnvironment, getEnvironmentByName, addDeployment } = require('@lagoon/commons/src/api');
+const {
+  getOpenShiftInfoForProject,
+  getOpenShiftInfoForProjectWithGroupEnvVars,
+  addOrUpdateEnvironment,
+  getEnvironmentByName,
+  addDeployment
+} = require('@lagoon/commons/src/api');
 
 const { sendToLagoonLogs, initSendToLagoonLogs } = require('@lagoon/commons/src/logs');
 const { consumeTasks, initSendToLagoonTasks, createTaskMonitor } = require('@lagoon/commons/src/tasks');
@@ -39,7 +45,7 @@ const messageConsumer = async msg => {
 
   logger.verbose(`Received DeployOpenshift task for project: ${projectName}, branch: ${branchName}, sha: ${sha}`);
 
-  const result = await getOpenShiftInfoForProject(projectName);
+  const result = await getOpenShiftInfoForProjectWithGroupEnvVars(projectName);
   const projectOpenShift = result.project
 
   const ocsafety = string => string.toLocaleLowerCase().replace(/[^0-9a-z-]/g,'-')
@@ -267,6 +273,13 @@ const messageConsumer = async msg => {
     if (type == "promote") {
       buildconfig.spec.strategy.customStrategy.env.push({"name": "PROMOTION_SOURCE_ENVIRONMENT","value": promoteSourceEnvironment})
       buildconfig.spec.strategy.customStrategy.env.push({"name": "PROMOTION_SOURCE_OPENSHIFT_PROJECT","value": openshiftPromoteSourceProject})
+    }
+    if (!R.isEmpty(projectOpenShift.groups)) {
+      projectOpenShift.groups.forEach(group => {
+        if (!R.isEmpty(group.envVariables)){
+          buildconfig.spec.strategy.customStrategy.env.push({"name": "LAGOON_GROUP_VARIABLES", "value": JSON.stringify(group.envVariables)})
+        }
+      });
     }
     if (!R.isEmpty(projectOpenShift.envVariables)) {
       buildconfig.spec.strategy.customStrategy.env.push({"name": "LAGOON_PROJECT_VARIABLES", "value": JSON.stringify(projectOpenShift.envVariables)})

@@ -181,8 +181,10 @@ const {
 const {
   getEnvVarsByProjectId,
   getEnvVarsByEnvironmentId,
+  getEnvVarsByGroupId,
   addEnvVariable,
   deleteEnvVariable,
+  addEnvVariableToGroup,
 } = require('./resources/env-variables/resolvers');
 
 /* ::
@@ -218,6 +220,7 @@ const resolvers /* : { [string]: ResolversObj | typeof GraphQLDate } */ = {
   },
   Group: {
     projects: getAllProjectsByGroupId,
+    envVariables: getEnvVarsByGroupId,
   },
   BillingGroup: {
     projects: getAllProjectsByGroupId,
@@ -345,6 +348,7 @@ const resolvers /* : { [string]: ResolversObj | typeof GraphQLDate } */ = {
     addRestore,
     updateRestore,
     addEnvVariable,
+    addEnvVariableToGroup,
     deleteEnvVariable,
     addTask,
     taskDrushArchiveDump,

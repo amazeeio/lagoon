@@ -89,6 +89,15 @@
   tasks:
   - include: ../../checks/check-url-content.yaml
 
+- name: "{{ testname }} - check if {{ project }} is deployed with RUNTIME scope environment variables from GROUP"
+  hosts: localhost
+  serial: 1
+  vars:
+    url: "{{ check_url }}"
+    expected_content: "LAGOON_GROUP_VARIABLE_RUNTIME=ECE1E07BBD"
+  tasks:
+  - include: ../../checks/check-url-content.yaml
+
 - name: "{{ testname }} - check if {{ project }} is built with project environment variables"
   hosts: localhost
   serial: 1

@@ -403,11 +403,19 @@ const taskDrushSqlSync = async (
     project: destinationEnvironment.project,
   });
 
+  const command =
+  'drush_version=$(drush version --format=list) && \
+if [ ${drush_version%.*.*} -gt "8" ]; then \
+  drush -y sql-sync @lagoon.' + sourceEnvironment.name + ' @self; \
+else \
+  drush -y sql-sync @' + sourceEnvironment.name + ' @self; \
+fi';
+
   const taskData = await Helpers(sqlClient).addTask({
     name: `Sync DB ${sourceEnvironment.name} -> ${destinationEnvironment.name}`,
     environment: destinationEnvironmentId,
     service: 'cli',
-    command: `drush -y sql-sync @${sourceEnvironment.name} @self`,
+    command,
     execute: true,
   });
 

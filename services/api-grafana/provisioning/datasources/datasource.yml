@@ -1,0 +1,17 @@
+apiVersion: 1
+
+deleteDatasources:
+  - name: APIDB
+    orgId: 1
+
+datasources:
+  - name: APIDB
+    type: mysql
+    access: proxy
+    url: api-db
+    password: api
+    user: api
+    database: infrastructure
+    basicAuth: false
+    isDefault: true
+    readOnly: false

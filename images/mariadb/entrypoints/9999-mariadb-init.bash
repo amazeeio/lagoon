@@ -118,6 +118,13 @@ EOF
       fi
     fi
 
+    if [ "$MARIADB_DATABASE" != "" ]; then
+
+      if [ "$MARIADB_READONLY_USER" != "" ]; then
+        echo "[i] Creating user: $MARIADB_READONLY_USER with password $MARIADB_READONLY_PASSWORD"
+        echo "GRANT SELECT ON \`$MARIADB_DATABASE\`.* TO '$MARIADB_READONLY_USER'@'%' IDENTIFIED BY '$MARIADB_READONLY_PASSWORD';" >> $tfile
+      fi
+    fi
 
     cat $tfile
     cat $tfile | mysql -v -u root

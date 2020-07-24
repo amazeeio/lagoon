@@ -765,3 +765,17 @@ services:
       lagoon.type: custom
       lagoon.template: services/api-redis/.lagoon.app.yml
       lagoon.image: amazeeiolagoon/api-redis:v1-8-1
+  api-grafana:
+    image: ${IMAGE_REPO:-lagoon}/api-grafana
+    ports:
+      - 3333:3000
+    volumes:
+      - ${PWD}/services/api-grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - api-db
+    labels:
+      lagoon.type: custom
+      lagoon.template: services/api-grafana/.lagoon.app.yml
+      lagoon.name: api-grafana
+      lagoon.image: amazeeiolagoon/api-grafana
+

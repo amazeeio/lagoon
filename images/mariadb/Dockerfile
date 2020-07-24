@@ -32,6 +32,9 @@ ENV MARIADB_DATABASE=lagoon \
     MARIADB_PASSWORD=lagoon \
     MARIADB_ROOT_PASSWORD=Lag00n
 
+ENV MARIADB_READONLY_USER=lagoon_readonly \
+    MARIADB_READONLY_PASSWORD=lag00n_readonly
+
 RUN \
     apk add --no-cache --virtual .common-run-deps \
     bash \

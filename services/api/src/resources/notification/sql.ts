@@ -146,25 +146,5 @@ export const Sql = {
   selectNotificationEmailByName: (name: string) =>
     knex('notification_email')
       .where('name', '=', name)
-      .toString(),
-  truncateNotificationSlack: () =>
-    knex('notification_slack')
-      .truncate()
-      .toString(),
-  truncateNotificationEmail: () =>
-    knex('notification_email')
-      .truncate()
-      .toString(),
-  truncateNotificationRocketchat: () =>
-    knex('notification_rocketchat')
-      .truncate()
-      .toString(),
-  truncateNotificationMicrosoftTeams: () =>
-    knex('notification_microsoftteams')
-      .truncate()
-      .toString(),
-  truncateProjectNotification: () =>
-    knex('project_notification')
-      .truncate()
-      .toString(),
+      .toString()
 };

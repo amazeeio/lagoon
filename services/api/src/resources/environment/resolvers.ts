@@ -546,19 +546,6 @@ export const getAllEnvironments: ResolverFn = async (
   return rows;
 };
 
-export const deleteAllEnvironments: ResolverFn = async (
-  root,
-  args,
-  { sqlClient, hasPermission },
-) => {
-  await hasPermission('environment', 'deleteAll');
-
-  await query(sqlClient, Sql.truncateEnvironment());
-
-  // TODO: Check rows for success
-  return 'success';
-};
-
 export const setEnvironmentServices: ResolverFn = async (
   root,
   { input: { environment: environmentId, services } },

@@ -171,29 +171,3 @@ export const deleteSshKeyById: ResolverFn = async (
 
   return 'success';
 };
-
-export const deleteAllSshKeys: ResolverFn = async (
-  root,
-  args,
-  { sqlClient, hasPermission },
-) => {
-  await hasPermission('ssh_key', 'deleteAll');
-
-  await query(sqlClient, Sql.truncateSshKey());
-
-  // TODO: Check rows for success
-  return 'success';
-};
-
-export const removeAllSshKeysFromAllUsers: ResolverFn = async (
-  root,
-  args,
-  { sqlClient, hasPermission },
-) => {
-  await hasPermission('ssh_key', 'removeAll');
-
-  await query(sqlClient, Sql.truncateUserSshKey());
-
-  // TODO: Check rows for success
-  return 'success';
-};

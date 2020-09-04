@@ -15,10 +15,6 @@ export const Sql = {
       .where('name', '=', name)
       .andWhere('project', '=', projectId)
       .toString(),
-  truncateEnvironment: () =>
-    knex('environment')
-      .truncate()
-      .toString(),
   insertService: (
     environment: number,
     name: string,

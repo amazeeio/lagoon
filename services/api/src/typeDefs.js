@@ -797,21 +797,15 @@ const typeDefs = gql`
     """
     allProblemHarborScanMatchers: [ProblemHarborScanMatch]
   }
-
-  # Must provide id OR name
   input ProjectInput {
     id: Int
     name: String
   }
-
-  # Must provide id OR name and project
   input EnvironmentInput {
     id: Int
     name: String
     project: ProjectInput
   }
-
-  # Must provide id OR name and environment
   input DeploymentInput {
     id: Int
     name: String
@@ -1404,7 +1398,6 @@ const typeDefs = gql`
     addOrUpdateEnvironment(input: AddEnvironmentInput!): Environment
     updateEnvironment(input: UpdateEnvironmentInput!): Environment
     deleteEnvironment(input: DeleteEnvironmentInput!): String
-    deleteAllEnvironments: String
     """
     Add or update Storage Information for Environment
     """
@@ -1416,7 +1409,6 @@ const typeDefs = gql`
       input: UpdateNotificationSlackInput!
     ): NotificationSlack
     deleteNotificationSlack(input: DeleteNotificationSlackInput!): String
-    deleteAllNotificationSlacks: String
     addNotificationRocketChat(
       input: AddNotificationRocketChatInput!
     ): NotificationRocketChat
@@ -1426,7 +1418,6 @@ const typeDefs = gql`
     deleteNotificationRocketChat(
       input: DeleteNotificationRocketChatInput!
     ): String
-    deleteAllNotificationRocketChats: String
     addNotificationMicrosoftTeams(
       input: AddNotificationMicrosoftTeamsInput!
     ): NotificationMicrosoftTeams
@@ -1436,7 +1427,6 @@ const typeDefs = gql`
     deleteNotificationMicrosoftTeams(
       input: DeleteNotificationMicrosoftTeamsInput!
     ): String
-    deleteAllNotificationMicrosoftTeams: String
     addNotificationEmail(
       input: AddNotificationEmailInput!
     ): NotificationEmail
@@ -1446,7 +1436,6 @@ const typeDefs = gql`
     deleteNotificationEmail(
       input: DeleteNotificationEmailInput!
     ): String
-    deleteAllNotificationEmails: String
     """
     Connect previous created Notification to a Project
     """
@@ -1458,21 +1447,17 @@ const typeDefs = gql`
     addOpenshift(input: AddOpenshiftInput!): Openshift
     updateOpenshift(input: UpdateOpenshiftInput!): Openshift
     deleteOpenshift(input: DeleteOpenshiftInput!): String
-    deleteAllOpenshifts: String
     addProject(input: AddProjectInput!): Project
     updateProject(input: UpdateProjectInput!): Project
     deleteProject(input: DeleteProjectInput!): String
-    deleteAllProjects: String
     addSshKey(input: AddSshKeyInput!): SshKey
     updateSshKey(input: UpdateSshKeyInput!): SshKey
     deleteSshKey(input: DeleteSshKeyInput!): String
     deleteSshKeyById(input: DeleteSshKeyByIdInput!): String
-    deleteAllSshKeys: String
     removeAllSshKeysFromAllUsers: String
     addUser(input: AddUserInput!): User
     updateUser(input: UpdateUserInput!): User
     deleteUser(input: DeleteUserInput!): String
-    deleteAllUsers: String
     addDeployment(input: AddDeploymentInput!): Deployment
     deleteDeployment(input: DeleteDeploymentInput!): String
     updateDeployment(input: UpdateDeploymentInput): Deployment
@@ -1486,7 +1471,6 @@ const typeDefs = gql`
     addFact(input: AddFactInput!): Fact
     deleteFact(input: DeleteFactInput!): String
     deleteBackup(input: DeleteBackupInput!): String
-    deleteAllBackups: String
     addRestore(input: AddRestoreInput!): Restore
     updateRestore(input: UpdateRestoreInput!): Restore
     addEnvVariable(input: EnvVariableInput!): EnvKeyValue
@@ -1518,7 +1502,6 @@ const typeDefs = gql`
     addGroup(input: AddGroupInput!): GroupInterface
     updateGroup(input: UpdateGroupInput!): GroupInterface
     deleteGroup(input: DeleteGroupInput!): String
-    deleteAllGroups: String
     addUserToGroup(input: UserGroupRoleInput!): GroupInterface
     removeUserFromGroup(input: UserGroupInput!): GroupInterface
     addGroupsToProject(input: ProjectGroupsInput): Project

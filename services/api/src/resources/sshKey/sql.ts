@@ -62,13 +62,5 @@ export const Sql = {
     knex('ssh_key')
       .where('id', '=', id)
       .update(patch)
-      .toString(),
-  truncateSshKey: () =>
-    knex('ssh_key')
-      .truncate()
-      .toString(),
-  truncateUserSshKey: () =>
-    knex('user_ssh_key')
-      .truncate()
-      .toString(),
+      .toString()
 };

@@ -50,10 +50,6 @@ export const Sql = {
       .where('backup_id', backupId)
       .update({ deleted: knex.fn.now() })
       .toString(),
-  truncateBackup: () =>
-    knex('environment_backup')
-      .truncate()
-      .toString(),
   selectRestore: (id: number) =>
     knex('backup_restore')
       .where('id', '=', id)

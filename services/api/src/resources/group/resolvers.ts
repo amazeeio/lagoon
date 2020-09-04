@@ -230,29 +230,6 @@ export const deleteGroup: ResolverFn = async (
   return 'success';
 };
 
-export const deleteAllGroups: ResolverFn = async (
-  _root,
-  _args,
-  { models, hasPermission },
-) => {
-  await hasPermission('group', 'deleteAll');
-
-  const groups = await models.GroupModel.loadAllGroups();
-
-  let deleteErrors: String[] = [];
-  for (const group of groups) {
-    try {
-      await models.GroupModel.deleteGroup(group.id);
-    } catch (err) {
-      deleteErrors = [...deleteErrors, `${group.name} (${group.id})`];
-    }
-  }
-
-  return R.ifElse(R.isEmpty, R.always('success'), deleteErrors => {
-    throw new Error(`Could not delete groups: ${deleteErrors.join(', ')}`);
-  })(deleteErrors);
-};
-
 export const addUserToGroup: ResolverFn = async (
   _root,
   { input: { user: userInput, group: groupInput, role } },

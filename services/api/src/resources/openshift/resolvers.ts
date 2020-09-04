@@ -127,16 +127,3 @@ export const updateOpenshift: ResolverFn = async (
 
   return R.prop(0, rows);
 };
-
-export const deleteAllOpenshifts: ResolverFn = async (
-  root,
-  args,
-  { sqlClient, hasPermission },
-) => {
-  await hasPermission('openshift', 'deleteAll');
-
-  await query(sqlClient, Sql.truncateOpenshift());
-
-  // TODO: Check rows for success
-  return 'success';
-};

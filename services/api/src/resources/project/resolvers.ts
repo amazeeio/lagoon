@@ -673,25 +673,6 @@ export const updateProject: ResolverFn = async (
   return Helpers(sqlClient).getProjectById(id);
 };
 
-export const deleteAllProjects: ResolverFn = async (
-  root,
-  args,
-  { sqlClient, hasPermission },
-) => {
-  await hasPermission('project', 'deleteAll');
-
-  const projectNames = await Helpers(sqlClient).getAllProjectNames();
-
-  await query(sqlClient, Sql.truncateProject());
-
-  for (const name of projectNames) {
-    await KeycloakOperations.deleteGroup(name);
-  }
-
-  // TODO: Check rows for success
-  return 'success';
-};
-
 export const removeProjectMetadataByKey: ResolverFn = async (
   root,
   {

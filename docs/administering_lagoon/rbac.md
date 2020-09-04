@@ -53,7 +53,6 @@ Here is a table that lists the roles and the access they have:
 | **Name** | **Resource** | **Scope** | **Attributes** | **Platform-Wide Admin** | **Platform-Wide Owner** | **Owner** | **Maintainer** | **Developer** | **Reporter** | **Guest** | **Self** |
 | addBackup | backup | add | projectID | Yes | Yes | Yes | Yes | Yes | No | No |  |
 | deleteBackup | backup | delete | projectID | Yes | Yes | Yes | Yes | No | No | No |  |
-| deleteAllBackups | backup | deleteAll |  | Yes |  |  |  |  | No | No |  |
 | getBackupsByEnvironmentId | backup | view | projectID | Yes | Yes | Yes | Yes | Yes | No | No |  |
 |  | deployment | view | projectID | Yes | Yes | Yes | Yes | Yes | Yes | Yes |  |
 | addEnvVariable \(to Project\) | env\_var | project:add | projectID | Yes | Yes | Yes | No | No | No | No |  |
@@ -69,7 +68,6 @@ Here is a table that lists the roles and the access they have:
 | updateEnvironment | environment | update:production | projectID | Yes | Yes | Yes | Yes | No | No | No |  |
 | deleteEnvironment | environment | delete:development | projectID | Yes | Yes | Yes | Yes | Yes | No | No |  |
 | deleteEnvironment | environment | delete:production | projectID | Yes | Yes | Yes | No | No | No | No |  |
-| deleteAllEnvironments | environment | deleteAll |  | Yes |  |  |  |  |  |  |  |
 | addOrUpdateEnvironmentStorage | environment | storage |  | Yes | Yes |  |  |  |  |  |  |
 | addDeployment | environment | deploy:development | projectID | Yes | Yes | Yes | Yes | Yes | No | No |  |
 | addDeployment | environment | deploy:production | projectID | Yes | Yes | Yes | Yes | No | No | No |  |
@@ -93,23 +91,18 @@ Here is a table that lists the roles and the access they have:
 | addGroup | group | add |  | Yes | Yes | Yes | Yes | Yes | Yes | Yes |  |
 | updateGroup | group | update | groupID | Yes | Yes | Yes | Yes | No | No | No |  |
 | deleteGroup | group | delete | groupID | Yes | Yes | Yes | Yes | No | No | No |  |
-| deleteAllGroups | group | deleteAll |  | Yes |  |  |  |  |  |  |  |
 | addUserToGroup | group | addUser | groupID | Yes | Yes | Yes | Yes | No | No | No |  |
 | removeUserFromGroup | group | removeUser | groupID | Yes | Yes | Yes | Yes | No | No | No |  |
 | addNotificationSlack | notification | add |  | Yes | Yes |  |  |  |  |  |  |
 | updateNotificationSlack | notification | update |  | Yes | Yes |  |  |  |  |  |  |
 | deleteNotificationSlack | notification | delete |  | Yes | Yes |  |  |  |  |  |  |
-| deleteAllNotificationSlacks | notification | deleteAll |  | Yes |  |  |  |  |  |  |  |
 | addNotificationRocketChat | notification | add |  | Yes | Yes |  |  |  |  |  |  |
 | updateNotificationRocketChat | notification | update |  | Yes | Yes |  |  |  |  |  |  |
 | deleteNotificationRocketChat | notification | delete |  | Yes | Yes |  |  |  |  |  |  |
-| deleteAllNotificationRocketChats | notification | deleteAll |  | Yes |  |  |  |  |  |  |  |
-| removeAllNotificationsFromAllProjects | notification | removeAll |  | Yes |  |  |  |  |  |  |  |
 | getNotificationsByProjectId | notification | view | projectID | Yes | Yes | Yes | Yes | Yes | No | No |  |
 | addOpenshift | openshift | add |  | Yes | Yes |  |  |  |  |  |  |
 | updateOpenshift | openshift | update |  | Yes | Yes |  |  |  |  |  |  |
 | deleteOpenshift | openshift | delete |  | Yes | Yes |  |  |  |  |  |  |
-| deleteAllOpenshifts | openshift | deleteAll |  | Yes | Yes |  |  |  |  |  |  |
 | getAllOpenshifts | openshift | viewAll |  | Yes |  |  |  |  |  |  |  |
 | getOpenshiftByProjectId | openshift | view | projectID | Yes | Yes | Yes | Yes | No | No | No |  |
 | addNotificationToProject | project | addNotification | projectID | Yes | Yes | Yes | Yes | No | No | No |  |
@@ -117,7 +110,6 @@ Here is a table that lists the roles and the access they have:
 | addProject | project | add |  | Yes | Yes | Yes | Yes | Yes | Yes | Yes |  |
 | updateProject | project | update | projectID | Yes | Yes | Yes | Yes | No | No | No |  |
 | deleteProject | project | delete | projectID | Yes | Yes | Yes | No | No | No | No |  |
-| deleteAllProjects | project | deleteAll |  | Yes |  |  |  |  |  |  |  |
 | addGroupsToProject | project | addGroup | projectID | Yes | Yes | Yes | Yes | No | No | No |  |
 | removeGroupsFromProject | project | removeGroup | projectID | Yes | Yes | Yes | Yes | No | No | No |  |
 | getAllProjects | project | viewAll |  | Yes | Yes |  |  |  |  |  |  |
@@ -129,8 +121,6 @@ Here is a table that lists the roles and the access they have:
 | addSshKey | ssh\_key | add | userId | Yes | Yes |  |  |  |  |  | Yes |
 | updateSshKey | ssh\_key | update | userId | Yes | Yes |  |  |  |  |  | Yes |
 | deleteSshKey | ssh\_key | delete | userId | Yes | Yes |  |  |  |  |  | Yes |
-| deleteAllSshKeys | ssh\_key | deleteAll |  | Yes |  |  |  |  |  |  |  |
-| removeAllSshKeysFromAllUsers | ssh\_key | removeAll |  | Yes |  |  |  |  |  |  |  |
 | getUserSshKeys | ssh\_key | view:user | userID | Yes | Yes |  |  |  |  |  | Yes |
 | addTask | task | add:development | projectID | Yes | Yes | Yes | Yes | Yes | No | No |  |
 | addTask | task | add:production | projectID | Yes | Yes | Yes | Yes | No | No | No |  |
@@ -162,7 +152,6 @@ Here is a table that lists the roles and the access they have:
 | addUser | user | add |  | Yes | Yes | Yes | Yes | Yes | Yes | Yes |  |
 | updateUser | user | update | userId | Yes | Yes |  |  |  |  |  | Yes |
 | deleteUser | user | delete | userId | Yes | Yes |  |  |  |  |  | Yes |
-| deleteAllUsers | user | deleteAll |  | Yes |  |  |  |  |  |  |  |
 | getProjectByEnvironmentId | project | viewPrivateKey | projectID | Yes | Yes | Yes | No | No | No | No |  |
 | getProjectByGitUrl | project | viewPrivateKey | projectID | Yes | Yes | Yes | No | No | No | No |  |
 | getProjectByName | project | viewPrivateKey | projectID | Yes | Yes | Yes | No | No | No | No |  |

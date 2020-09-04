@@ -47,8 +47,4 @@ export const Sql = {
       .where('id', '=', id)
       .update(patch)
       .toString(),
-  truncateProject: () =>
-    knex('project')
-      .truncate()
-      .toString(),
 };

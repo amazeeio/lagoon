@@ -16,6 +16,51 @@
   tasks:
   - include: ../../checks/check-url-content.yaml
 
+- name: "{{ testname }} - check if {{ project }} allows .well-known requests"
+  hosts: localhost
+  serial: 1
+  vars:
+    url: "http://nginx.{{ project | regex_replace('_', '-') }}.{{ branch | regex_replace('/', '-') }}.{{ lookup('env','ROUTE_SUFFIX_HTTP') }}:{{ lookup('env','ROUTE_SUFFIX_HTTP_PORT') }}/.well-known/acme-challenge/rj5pnMyHpHeeqA05tlpUesOtgIdLjySpYg_I87ldpMw"
+    expected_returncode: 404
+  tasks:
+    - include: ../../checks/check-url-returncode.yaml
+
+- name: "{{ testname }} - check if {{ project }} blocks .git requests"
+  hosts: localhost
+  serial: 1
+  vars:
+    url: "http://nginx.{{ project | regex_replace('_', '-') }}.{{ branch | regex_replace('/', '-') }}.{{ lookup('env','ROUTE_SUFFIX_HTTP') }}:{{ lookup('env','ROUTE_SUFFIX_HTTP_PORT') }}/.git/config"
+    expected_returncode: 403
+  tasks:
+    - include: ../../checks/check-url-returncode.yaml
+
+- name: "{{ testname }} - check if {{ project }} allows requests to /core/install.php"
+  hosts: localhost
+  serial: 1
+  vars:
+    url: "http://nginx.{{ project | regex_replace('_', '-') }}.{{ branch | regex_replace('/', '-') }}.{{ lookup('env','ROUTE_SUFFIX_HTTP') }}:{{ lookup('env','ROUTE_SUFFIX_HTTP_PORT') }}/core/install.php"
+    expected_returncode: 200
+  tasks:
+    - include: ../../checks/check-url-returncode.yaml
+
+- name: "{{ testname }} - check if {{ project }} redirects requests to /index.php/node"
+  hosts: localhost
+  serial: 1
+  vars:
+    url: "http://nginx.{{ project | regex_replace('_', '-') }}.{{ branch | regex_replace('/', '-') }}.{{ lookup('env','ROUTE_SUFFIX_HTTP') }}:{{ lookup('env','ROUTE_SUFFIX_HTTP_PORT') }}/index.php/node"
+    expected_returncode: 301
+  tasks:
+    - include: ../../checks/check-url-returncode.yaml
+
+- name: "{{ testname }} - check if {{ project }} redirects requests to /es/index.php/node"
+  hosts: localhost
+  serial: 1
+  vars:
+    url: "http://nginx.{{ project | regex_replace('_', '-') }}.{{ branch | regex_replace('/', '-') }}.{{ lookup('env','ROUTE_SUFFIX_HTTP') }}:{{ lookup('env','ROUTE_SUFFIX_HTTP_PORT') }}/es/index.php/node"
+    expected_returncode: 301
+  tasks:
+    - include: ../../checks/check-url-returncode.yaml
+
 - name: "{{ testname }} - check if {{ project }} is deployed with searching for the hash, varnish route"
   hosts: localhost
   serial: 1

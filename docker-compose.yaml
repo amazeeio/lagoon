@@ -16,6 +16,7 @@ services:
     command: yarn run dev
     ports:
       - '7777:3000'
+      - '9019:9229'
     volumes:
       - ./services/webhook-handler/src:/app/services/webhook-handler/src
       - ./node-packages:/app/node-packages:delegated
@@ -49,6 +50,8 @@ services:
     volumes:
       - ./services/openshiftremove/src:/app/services/openshiftremove/src
       - ./node-packages:/app/node-packages:delegated
+    ports:
+      - '9018:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/openshiftremove/.lagoon.app.yml
@@ -61,6 +64,8 @@ services:
     volumes:
       - ./services/openshiftbuilddeploy/src:/app/services/openshiftbuilddeploy/src
       - ./node-packages:/app/node-packages:delegated
+    ports:
+      - '9013:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/openshiftbuilddeploy/.lagoon.app.yml
@@ -75,6 +80,8 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-XXXXXXXXXXXXXXXXXXXX}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-xxxxxxxxxxxxxxxxxxxx}
       - AWS_BUCKET=${AWS_BUCKET:-aws-bucket}
+    ports:
+      - '9014:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/openshiftbuilddeploymonitor/.lagoon.app.yml
@@ -89,6 +96,8 @@ services:
       # Gateway IP in virtualbox, so pods running in minishift can connect to
       # docker-for-mac containers.
       - LAGOON_SSH_HOST=10.0.2.2
+    ports:
+      - '9015:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/openshiftjobs/.lagoon.app.yml
@@ -99,6 +108,8 @@ services:
     volumes:
       - ./services/openshiftjobsmonitor/src:/app/services/openshiftjobsmonitor/src
       - ./node-packages:/app/node-packages:delegated
+    ports:
+      - '9016:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/openshiftjobsmonitor/.lagoon.app.yml
@@ -109,6 +120,8 @@ services:
     volumes:
       - ./services/openshiftmisc/src:/app/services/openshiftmisc/src
       - ./node-packages:/app/node-packages:delegated
+    ports:
+      - '9017:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/openshiftmisc/.lagoon.app.yml
@@ -119,6 +132,8 @@ services:
     volumes:
       - ./services/kubernetesmisc/src:/app/services/kubernetesmisc/src
       - ./node-packages:/app/node-packages:delegated
+    ports:
+      - '9007:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/kubernetesmisc/.lagoon.app.yml
@@ -132,6 +147,8 @@ services:
     volumes:
       - ./services/kubernetesbuilddeploy/src:/app/services/kubernetesbuilddeploy/src
       - ./node-packages:/app/node-packages:delegated
+    ports:
+      - '9002:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/kubernetesbuilddeploy/.lagoon.app.yml
@@ -142,6 +159,8 @@ services:
     volumes:
       - ./services/kubernetesdeployqueue/src:/app/services/kubernetesdeployqueue/src
       - ./node-packages:/app/node-packages:delegated
+    ports:
+      - '9004:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/kubernetesdeployqueue/.lagoon.app.yml
@@ -156,6 +175,8 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-XXXXXXXXXXXXXXXXXXXX}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-xxxxxxxxxxxxxxxxxxxx}
       - AWS_BUCKET=${AWS_BUCKET:-aws-bucket}
+    ports:
+      - '9003:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/kubernetesbuilddeploymonitor/.lagoon.app.yml
@@ -170,6 +191,8 @@ services:
       # Gateway IP in virtualbox, so pods running in minishift can connect to
       # docker-for-mac containers.
       - LAGOON_SSH_HOST=10.0.2.2
+    ports:
+      - '9005:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/kubernetesjobs/.lagoon.app.yml
@@ -184,6 +207,8 @@ services:
       # Gateway IP in virtualbox, so pods running in minishift can connect to
       # docker-for-mac containers.
       - LAGOON_SSH_HOST=10.0.2.2
+    ports:
+      - '9006:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/kubernetesjobsmonitor/.lagoon.app.yml
@@ -194,6 +219,8 @@ services:
     volumes:
       - ./services/kubernetesremove/src:/app/services/kubernetesremove/src
       - ./node-packages:/app/node-packages:delegated
+    ports:
+      - '9008:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/kubernetesremove/.lagoon.app.yml
@@ -214,6 +241,8 @@ services:
     volumes:
       - ./services/logs2rocketchat/src:/app/services/logs2rocketchat/src
       - ./node-packages:/app/node-packages:delegated
+    ports:
+      - '9011:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/logs2rocketchat/.lagoon.app.yml
@@ -224,6 +253,8 @@ services:
     volumes:
       - ./services/logs2slack/src:/app/services/logs2slack/src
       - ./node-packages:/app/node-packages:delegated
+    ports:
+      - '9012:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/logs2slack/.lagoon.app.yml
@@ -234,6 +265,8 @@ services:
     volumes:
       - ./services/logs2microsoftteams/src:/app/services/logs2microsoftteams/src
       - ./node-packages:/app/node-packages:delegated
+    ports:
+      - '9010:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/logs2microsoftteams/.lagoon.app.yml
@@ -244,6 +277,8 @@ services:
     volumes:
       - ./services/logs2email/src:/app/services/logs2email/src
       - ./node-packages:/app/node-packages:delegated
+    ports:
+      - '9009:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/logs2slack/.lagoon.app.yml
@@ -262,6 +297,8 @@ services:
     volumes:
       - ./services/webhooks2tasks/src:/app/services/webhooks2tasks/src
       - ./node-packages:/app/node-packages:delegated
+    ports:
+      - '9020:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/webhooks2tasks/.lagoon.app.yml
@@ -280,6 +317,7 @@ services:
       - keycloak
     ports:
       - '3000:3000'
+      - '9021:9229'
     # Uncomment for local new relic tracking
     # environment:
     #   - NEW_RELIC_LICENSE_KEY=
@@ -333,6 +371,7 @@ services:
       - ./services/auth-server/src:/app/services/auth-server/src
     ports:
       - '3001:3000'
+      - '9001:9229'
     labels:
       lagoon.type: custom
       lagoon.template: services/auth-server/.lagoon.app.yml

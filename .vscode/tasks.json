@@ -1,0 +1,203 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Enable Node.js debugger - dynamic",
+      "type": "shell",
+      "command": "docker exec ${command:vscode-docker.containers.select} sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - api",
+      "type": "shell",
+      "command": "docker-compose exec api sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - auth-server",
+      "type": "shell",
+      "command": "docker-compose exec auth-server sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - kubernetesbuilddeploy",
+      "type": "shell",
+      "command": "docker-compose exec kubernetesbuilddeploy sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - kubernetesbuilddeploymonitor",
+      "type": "shell",
+      "command": "docker-compose exec kubernetesbuilddeploymonitor sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - kubernetesdeployqueue",
+      "type": "shell",
+      "command": "docker-compose exec kubernetesdeployqueue sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - kubernetesjobs",
+      "type": "shell",
+      "command": "docker-compose exec kubernetesjobs sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - kubernetesjobsmonitor",
+      "type": "shell",
+      "command": "docker-compose exec kubernetesjobsmonitor sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - kubernetesmisc",
+      "type": "shell",
+      "command": "docker-compose exec kubernetesmisc sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - kubernetesremove",
+      "type": "shell",
+      "command": "docker-compose exec kubernetesremove sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - logs2email",
+      "type": "shell",
+      "command": "docker-compose exec logs2email sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - logs2microsoftteams",
+      "type": "shell",
+      "command": "docker-compose exec logs2microsoftteams sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - logs2rocketchat",
+      "type": "shell",
+      "command": "docker-compose exec logs2rocketchat sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - logs2slack",
+      "type": "shell",
+      "command": "docker-compose exec logs2slack sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - openshiftbuilddeploy",
+      "type": "shell",
+      "command": "docker-compose exec openshiftbuilddeploy sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - openshiftbuilddeploymonitor",
+      "type": "shell",
+      "command": "docker-compose exec openshiftbuilddeploymonitor sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - openshiftjobs",
+      "type": "shell",
+      "command": "docker-compose exec openshiftjobs sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - openshiftjobsmonitor",
+      "type": "shell",
+      "command": "docker-compose exec openshiftjobsmonitor sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - openshiftmisc",
+      "type": "shell",
+      "command": "docker-compose exec openshiftmisc sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - openshiftremove",
+      "type": "shell",
+      "command": "docker-compose exec openshiftremove sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - webhook-handler",
+      "type": "shell",
+      "command": "docker-compose exec webhook-handler sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Enable Node.js debugger - webhooks2tasks",
+      "type": "shell",
+      "command": "docker-compose exec webhooks2tasks sh -c 'pkill -SIGUSR1 -f inspect'",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

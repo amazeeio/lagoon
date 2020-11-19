@@ -12,7 +12,7 @@
     "test": "jest --forceExit --detectOpenHandles --maxWorkers=10",
     "test:watch": "jest --forceExit --detectOpenHandles --maxWorkers=10 --watch",
     "build": "tsc --build",
-    "start": "node -r dotenv-extended/config dist/index",
+    "start": "node -r dotenv-extended/config --inspect-port=0.0.0.0:9229 dist/index",
     "dev": "mkdir -p ../../node-packages/commons/dist && NODE_ENV=development nodemon",
     "sync:gitlab:users": "node dist/gitlab-sync/users",
     "sync:gitlab:groups": "node dist/gitlab-sync/groups",
@@ -32,7 +32,7 @@
       "../../node-packages/"
     ],
     "ext": "js,ts,json",
-    "exec": "yarn build --incremental && yarn start --inspect=0.0.0.0:9229"
+    "exec": "yarn build --incremental && yarn start"
   },
   "keywords": [],
   "author": "amazee.io <hello@amazee.io> (http://www.amazee.io)",

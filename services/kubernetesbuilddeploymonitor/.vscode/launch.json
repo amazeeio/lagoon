@@ -1,0 +1,19 @@
+// This configuration is picked up when using Remote - Containers extension
+// https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach Node.js debugger",
+      "port": 9229,
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "sourceMaps": true,
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "preLaunchTask": "Enable Node.js debugger"
+    }
+  ]
+}

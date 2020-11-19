@@ -1,0 +1,16 @@
+// This configuration is picked up when using Remote - Containers extension
+// https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Enable Node.js debugger",
+      "type": "shell",
+      "command": "pkill -SIGUSR1 -f inspect",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

@@ -14,7 +14,7 @@
   "scripts": {
     "clean": "rimraf dist && rimraf logs",
     "build": "tsc",
-    "start": "node dist/index",
+    "start": "node --inspect-port=0.0.0.0:9229 dist/index",
     "dev": "NODE_ENV=development nodemon",
     "format": "prettier-eslint --write '**/*.js'",
     "lint": "../../node-packages/eslint-config-lagoon-node/node_modules/.bin/eslint ."
@@ -22,7 +22,7 @@
   "nodemonConfig": {
     "watch": ["src"],
     "ext": "js,ts,json",
-    "exec": "yarn build && yarn start --inspect=0.0.0.0:9229"
+    "exec": "yarn build && yarn start"
   },
   "dependencies": {
     "axios": "^0.19.0",

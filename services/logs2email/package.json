@@ -6,14 +6,14 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc --build",
-    "start": "node dist/index",
+    "start": "node --inspect-port=0.0.0.0:9229 dist/index",
     "dev": "mkdir -p ../../node-packages/commons/dist && NODE_ENV=development nodemon"
   },
   "nodemonConfig": {
     "ignore": ["../../node-packages/commons/dist/"],
     "watch": ["src", "../../node-packages/"],
     "ext": "js,ts,json",
-    "exec": "yarn build --incremental && yarn start --inspect=0.0.0.0:9229"
+    "exec": "yarn build --incremental && yarn start"
   },
   "license": "MIT",
   "dependencies": {

@@ -1,0 +1,7 @@
+query ($openshiftProjectName: String!)
+{
+  userCanSshToEnvironment(openshiftProjectName: $openshiftProjectName)
+  {
+    openshiftProjectName
+  }
+}

@@ -194,26 +194,26 @@ $(build-taskimages):
 
 # Variables of service images we manage and build
 services :=	api \
-			api-db \
-			api-redis \
-			auth-server \
-			auto-idler \
-			backup-handler \
-			broker \
-			broker-single \
-			controllerhandler \
-			drush-alias \
-			keycloak \
-			keycloak-db \
-			logs2email \
-			logs2microsoftteams \
-			logs2rocketchat \
-			logs2slack \
-			storage-calculator \
-			ui \
-			webhook-handler \
-			webhooks2tasks
-
+            api-db \
+            api-redis \
+            auth-server \
+            auto-idler \
+            backup-handler \
+            broker \
+            broker-single \
+            controllerhandler \
+            drush-alias \
+            keycloak \
+            keycloak-db \
+            logs2email \
+            logs2microsoftteams \
+            logs2rocketchat \
+            logs2slack \
+            ssh-portal \
+            storage-calculator \
+            ui \
+            webhook-handler \
+            webhooks2tasks
 
 service-images += $(services)
 

@@ -51,6 +51,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: lagoon-env
+            - configMapRef:
+                name: lagoon-api-vars
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

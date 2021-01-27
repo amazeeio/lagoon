@@ -39,6 +39,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: lagoon-env
+            - configMapRef:
+                name: lagoon-api-vars
           ports:
             - name: 5601-tcp
               containerPort: 5601

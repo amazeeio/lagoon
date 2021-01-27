@@ -61,6 +61,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: lagoon-env
+            - configMapRef:
+                name: lagoon-api-vars
           resources:
             {{- toYaml .Values.resources.nginx | nindent 12 }}
 
@@ -83,6 +85,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: lagoon-env
+            - configMapRef:
+                name: lagoon-api-vars
           env:
             # LAGOON_GIT_SHA is injected directly and not loaded via `lagoon-env` config
             # This will cause the pod to redeploy on every deployment, even the files have not changed

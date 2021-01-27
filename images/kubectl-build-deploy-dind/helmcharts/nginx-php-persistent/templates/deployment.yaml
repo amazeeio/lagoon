@@ -67,6 +67,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: lagoon-env
+            - configMapRef:
+                name: lagoon-api-vars
           volumeMounts:
             - name: {{ include "nginx-php-persistent.persistentStorageName" . }}
               mountPath: {{ .Values.persistentStorage.path | quote }}
@@ -92,6 +94,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: lagoon-env
+            - configMapRef:
+                name: lagoon-api-vars
           env:
             # LAGOON_GIT_SHA is injected directly and not loaded via `lagoon-env` config
             # This will cause the pod to redeploy on every deployment, even the files have not changed

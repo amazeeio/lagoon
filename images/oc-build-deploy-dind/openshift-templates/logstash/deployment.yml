@@ -90,6 +90,8 @@ objects:
           envFrom:
           - configMapRef:
               name: lagoon-env
+          - configMapRef:
+              name: lagoon-api-vars
           env:
           - name: SERVICE_NAME
             value: ${SERVICE_NAME}

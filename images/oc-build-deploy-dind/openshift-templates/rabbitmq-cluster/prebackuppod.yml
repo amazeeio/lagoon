@@ -82,6 +82,8 @@ objects:
             envFrom:
               - configMapRef:
                   name: lagoon-env
+              - configMapRef:
+                  name: lagoon-api-vars
             image: alpine
             imagePullPolicy: Always
             name: ${SERVICE_NAME}-0-prebackuppod
@@ -130,6 +132,8 @@ objects:
             envFrom:
               - configMapRef:
                   name: lagoon-env
+              - configMapRef:
+                  name: lagoon-api-vars
             image: alpine
             imagePullPolicy: Always
             name: ${SERVICE_NAME}-1-prebackuppod
@@ -178,6 +182,8 @@ objects:
             envFrom:
               - configMapRef:
                   name: lagoon-env
+              - configMapRef:
+                  name: lagoon-api-vars
             image: imagecache.amazeeio.cloud/library/alpine
             imagePullPolicy: Always
             name: ${SERVICE_NAME}-2-prebackuppod

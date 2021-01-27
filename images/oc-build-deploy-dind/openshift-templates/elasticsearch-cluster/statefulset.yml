@@ -93,6 +93,8 @@ objects:
           envFrom:
           - configMapRef:
               name: lagoon-env
+          - configMapRef:
+              name: lagoon-api-vars
           resources:
             requests:
               cpu: 10m

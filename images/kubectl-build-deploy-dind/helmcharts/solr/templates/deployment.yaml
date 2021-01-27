@@ -57,6 +57,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: lagoon-env
+            - configMapRef:
+                name: lagoon-api-vars
           env:
             - name: CRONJOBS
               value: {{ .Values.inPodCronjobs | quote }}

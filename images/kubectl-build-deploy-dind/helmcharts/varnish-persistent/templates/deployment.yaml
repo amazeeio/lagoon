@@ -50,6 +50,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: lagoon-env
+            - configMapRef:
+                name: lagoon-api-vars
           ports:
             - name: http
               containerPort: 8080

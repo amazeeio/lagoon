@@ -1,61 +1,31 @@
 import * as R from 'ramda';
 import { MariaClient } from 'mariasql';
-import { query } from '../../util/db';
-import { Helpers as projectHelpers } from '../project/helpers';
+import { query} from '../../util/db';
 import { Sql } from './sql';
 
 export const Helpers = (sqlClient: MariaClient) => {
-    const groupByProblemIdentifier = (problems) => problems.reduce((obj, problem) => {
-        obj[problem.identifier] = obj[problem.identifier] || [];
-        obj[problem.identifier].push(problem);
-        return obj;
-    }, {});
+  const getAllProblems = async (projects, args) => {
+    const source = args.source && args.source.map(t => t.toLowerCase() || []);
+    const severity = args.severity && args.severity.map(t => t || []);
+    const envType = args.envType && args.envType.map(t => t.toLowerCase() || []);
 
-    const getAllProblems = async (source, environment, envType, severity) => {
-      const environmentType = envType && envType.map(t => t.toLowerCase() || []);
-
-      return await query(
-        sqlClient,
-        Sql.selectAllProblems({
-          source,
-          environmentId: environment,
-          environmentType,
-          severity,
-        })
-      );
-    };
-
-    const getSeverityOptions = async () => (
-      R.map(
-        R.prop('severity'),
-          await query(sqlClient, Sql.selectSeverityOptions()),
-        )
+    const rows = await query(
+      sqlClient,
+      Sql.selectProblemsByProjects({ projects, source, severity, envType })
     );
 
-    const getProblemsWithProjects = async (problems, hasPermission, args: any = []) => {
-        const withProjects = await Object.keys(problems).map((key) => {
-            let projects = problems[key].map(async (problem) => {
-                const envType =  !R.isEmpty(args.envType) && args.envType;
-                const {id, project, openshiftProjectName, name, envName, environmentType}: any =
-                    await projectHelpers(sqlClient).getProjectByEnvironmentId(problem.environment, envType) || {};
+    return rows;
+  };
 
-                hasPermission('project', 'view', {
-                    project: !R.isNil(project) && project,
-                });
+  const getSeverityOptions = async () => (
+    R.map(
+      R.prop('severity'),
+        await query(sqlClient, Sql.selectSeverityOptions()),
+      )
+  );
 
-                return (!R.isNil(id)) && {id, project, openshiftProjectName, name, environments: {name: envName}, type: environmentType};
-            });
-            const {...problem} = R.prop(0, problems[key]);
-            return {identifier: key, problem: {...problem}, projects: projects, problems: problems[key]};
-        });
-
-        return await Promise.all(withProjects);
-    };
-
-    return {
-      getAllProblems,
-      getSeverityOptions,
-      groupByProblemIdentifier,
-      getProblemsWithProjects
-    };
+  return {
+    getAllProblems,
+    getSeverityOptions
+  };
 };

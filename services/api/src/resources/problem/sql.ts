@@ -29,31 +29,31 @@ const standardProblemHarborScanMatchReturn = {
 };
 
 export const Sql = {
-  selectAllProblems: ({
+  selectProblemsByProjects: ({
+    projects = [],
+    envType = [],
     source = [],
-    environmentId,
-    environmentType = [],
     severity = [],
-  }: { source: string[], environmentId: number, environmentType: string[], severity: string[]}) => {
+  }: { projects: string[], source: string[], envType: string[], severity: string[] }) => {
     let q = knex('environment_problem as p')
     .join('environment as e', {environment: 'e.id'}, '=', {environment: 'p.environment'})
+    .whereIn('e.project', projects)
     .where('p.deleted', '=', '0000-00-00 00:00:00')
-    .select('p.*', {environment: 'e.id'}, { name: 'e.name', project: 'e.project',
-        environmentType: 'e.environment_type', openshiftProjectName: 'e.openshift_project_name'});
+    .select('p.*', { environment: 'e.id' });
 
-    if (environmentType.length > 0) {
-      q.whereIn('e.environment_type', environmentType);
+    if (envType.length > 0) {
+      q.whereIn('e.environment_type', envType);
     }
+
     if (source.length > 0) {
       q.whereIn('p.source', source);
     }
-    if (environmentId) {
-      q.where('p.environment', environmentId);
-    }
+
     if (severity.length > 0) {
       q.whereIn('p.severity', severity);
     }
-    return q.toString();
+
+    return q.toString()
   },
   selectSeverityOptions: () =>
     knex('environment_problem')

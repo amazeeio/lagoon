@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { query, prepare } from '../../util/db';
+import {query, prepare, whereAnd, inClause} from '../../util/db';
 import { Sql } from './sql';
 import { Helpers as problemHelpers } from './helpers';
 import { Helpers as environmentHelpers } from '../environment/helpers';
@@ -9,17 +9,29 @@ const logger = require('../../logger');
 export const getAllProblems: ResolverFn = async (
   root,
   args,
-  { sqlClient, hasPermission }
+  {
+    sqlClient,
+    hasPermission,
+    models,
+    keycloakGrant
+  },
 ) => {
   let rows = [];
 
   try {
-    if (!R.isEmpty(args)) {
-      rows = await problemHelpers(sqlClient).getAllProblems(args.source, args.environment, args.envType, args.severity);
-    }
-    else {
-      rows = await query(sqlClient, Sql.selectAllProblems({source: [], environmentId: 0, environmentType: [], severity: []}));
-    }
+    const userProjectIds = await models.UserModel.getAllProjectsIdsForUser({
+      id: keycloakGrant.access_token.content.sub,
+    });
+
+    let projects = await Promise.all(userProjectIds.filter(async (p) => {
+        await hasPermission('problem', 'view', {
+            project: p,
+        });
+
+        return p;
+    }));
+
+    rows = await problemHelpers(sqlClient).getAllProblems(projects, args);
   }
   catch (err) {
     if (err) {
@@ -28,20 +40,13 @@ export const getAllProblems: ResolverFn = async (
     }
   }
 
-  const problems: any = rows && rows.map(async problem => {
-     const { environment: envId, name, project, environmentType, openshiftProjectName, ...rest} = problem;
-
-      await hasPermission('problem', 'view', {
-          project: project,
-      });
-
-      return { ...rest, environment: { id: envId, name, project, environmentType, openshiftProjectName }};
+  const problems: any = rows && rows.map( (p: any) => {
+    const { environment: envId, name, project, environmentType, openshiftProjectName, ...rest } = p;
+    return { ...rest, environment: { id: envId, name, project, environmentType, openshiftProjectName }};
   });
 
-  return Promise.all(problems).then((completed) => {
-      const sorted = R.sort(R.descend(R.prop('severity')), completed);
-      return sorted.map((row: any) => ({ ...(row as Object) }));
-  });
+  const sorted = R.sort(R.descend(R.prop('severity')), [].concat.apply([], problems));
+  return sorted.map((row: any) => ({ ...(row as Object) }));
 };
 
 export const getSeverityOptions = async (

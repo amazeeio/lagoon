@@ -9,7 +9,7 @@ ENV LAGOON=storage-calculator
 RUN apk add --no-cache tini jq bash curl py3-jwt
 RUN pip install yq
 
-COPY create_jwt.py calculate-storage.sh /
+COPY create_jwt.py api-query.sh calculate-storage.sh process-deployment-target.sh process-project.sh /
 
 ENV JWTSECRET=super-secret-string \
     JWTAUDIENCE=api.dev \

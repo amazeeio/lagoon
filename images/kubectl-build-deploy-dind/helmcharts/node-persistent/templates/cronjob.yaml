@@ -34,8 +34,10 @@ spec:
         {{- end }}
           priorityClassName: {{ include "node-persistent.lagoonPriority" $ }}
           enableServiceLinks: false
+          {{- if $.Values.rootless }}
           securityContext:
             {{- toYaml $.Values.podSecurityContext | nindent 12 }}
+          {{- end }}
           volumes:
             - name: lagoon-sshkey
               secret:

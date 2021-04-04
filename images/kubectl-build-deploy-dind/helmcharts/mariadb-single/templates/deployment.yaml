@@ -31,12 +31,14 @@ spec:
         - name: {{ include "mariadb-single.fullname" . }}
           persistentVolumeClaim:
             claimName: {{ include "mariadb-single.fullname" . }}
+      {{- if .Values.rootless }}
       securityContext:
-        fsGroup: 0
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            runAsGroup: 0
+            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           env:

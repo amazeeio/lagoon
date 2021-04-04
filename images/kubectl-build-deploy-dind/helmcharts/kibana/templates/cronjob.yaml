@@ -1,4 +1,5 @@
 {{- range $cronjobName, $cronjobConfig := .Values.nativeCronjobs }}
+---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -33,8 +34,10 @@ spec:
         {{- end }}
           priorityClassName: {{ include "kibana.lagoonPriority" $ }}
           enableServiceLinks: false
+          {{- if $.Values.rootless }}
           securityContext:
             {{- toYaml $.Values.podSecurityContext | nindent 12 }}
+          {{- end }}
           volumes:
             - name: lagoon-sshkey
               secret:

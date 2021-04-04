@@ -30,8 +30,10 @@ spec:
             claimName: {{ include "node-persistent.persistentStorageName" . }}
       priorityClassName: {{ include "node-persistent.lagoonPriority" . }}
       enableServiceLinks: false
+      {{- if .Values.rootless }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- end }}
       containers:
         - image: {{ .Values.image | quote }}
           name: {{ .Chart.Name }}

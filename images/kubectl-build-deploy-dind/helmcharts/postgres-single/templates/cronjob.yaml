@@ -34,8 +34,10 @@ spec:
         {{- end }}
           priorityClassName: {{ include "postgres-single.lagoonPriority" $ }}
           enableServiceLinks: false
+          {{- if $.Values.rootless }}
           securityContext:
             {{- toYaml $.Values.podSecurityContext | nindent 12 }}
+          {{- end }}
           volumes:
             - name: {{ include "postgres-single.fullname" $ }}
               persistentVolumeClaim:

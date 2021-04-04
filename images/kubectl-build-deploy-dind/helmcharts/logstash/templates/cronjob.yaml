@@ -34,8 +34,10 @@ spec:
         {{- end }}
           priorityClassName: {{ include "logstash.lagoonPriority" $ }}
           enableServiceLinks: false
+          {{- if $.Values.rootless }}
           securityContext:
             {{- toYaml $.Values.podSecurityContext | nindent 12 }}
+          {{- end }}
           containers:
             - image: {{ $.Values.image | quote }}
               name: cronjob-{{ $.Release.Name }}-{{ $cronjobName }}

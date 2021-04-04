@@ -16,8 +16,16 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-podSecurityContext: {}
-  # fsGroup: 2000
+# This flag controls the injection of the pod securityContext values below.
+# It is intended to assist with phased rollout of rootless workloads.
+# It can be toggled via a build-time environment variable.
+# LAGOON_FEATURE_ROOTLESS_WORKLOAD=disabled sets `rootless: false`. Any other
+# value in the environment variable sets `rootless: true`.
+rootless: true
+podSecurityContext:
+  fsGroup: 10001
+  runAsGroup: 0
+  runAsUser: 10000
 
 securityContext: {}
   # capabilities:

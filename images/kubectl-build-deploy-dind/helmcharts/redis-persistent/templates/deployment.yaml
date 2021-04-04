@@ -34,8 +34,10 @@ spec:
             claimName: {{ include "redis-persistent.persistentStorageName" . }}
       priorityClassName: {{ include "redis-persistent.lagoonPriority" . }}
       enableServiceLinks: false
+      {{- if .Values.rootless }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- end }}
       containers:
         - image: {{ .Values.image | quote }}
           name: {{ .Chart.Name }}

@@ -34,8 +34,10 @@ spec:
         {{- end }}
           priorityClassName: {{ include "mariadb-single.lagoonPriority" $ }}
           enableServiceLinks: false
+          {{- if $.Values.rootless }}
           securityContext:
             {{- toYaml $.Values.podSecurityContext | nindent 12 }}
+          {{- end }}
           volumes:
             - name: {{ include "mariadb-single.fullname" $ }}
               persistentVolumeClaim:

@@ -36,8 +36,10 @@ spec:
           emptyDir: {}
       priorityClassName: {{ include "cli-persistent.lagoonPriority" . }}
       enableServiceLinks: false
+      {{- if .Values.rootless }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- end }}
       containers:
         - image: {{ .Values.image | quote }}
           name: {{ include "cli-persistent.fullname" . }}

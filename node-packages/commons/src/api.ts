@@ -1326,6 +1326,51 @@ export const getGroupMembersByGroupName = groupName =>
   { name: groupName }
 );
 
+export const addBulkProblems = async ({
+  problems
+}) => {
+
+  let mutation_query_str = `mutation addBulkProblems {`;
+
+  problems.map((p, i) => {
+    mutation_query_str += `
+    problem${i}: addProblem(input: {
+      environment: ${p.environment},
+      identifier: "${p.identifier}",
+      source: "${p.source}",
+      data: ${JSON.stringify(p.data).replace(/"/g, '\"')},
+      severity: ${p.severity},
+      severityScore: ${p.severityScore},
+      service: "${p.service}",
+      associatedPackage: "${p.associatedPackage}",
+      description: ${JSON.stringify(p.description).replace(/"/g, '\"')},
+      version: "${p.version}",
+      fixedVersion: "${p.fixedVersion}",
+      links: "${p.links}"
+    }) {
+      id
+      environment {
+        id
+      }
+      identifier
+      severity
+      source
+      severityScore
+      data
+      description
+      associatedPackage
+      version
+      fixedVersion
+      links
+    }`;
+  });
+
+  mutation_query_str += `
+  }`
+
+  return await graphqlapi.query(mutation_query_str);
+};
+
 export const addProblem = ({
   id = null,
   environment,

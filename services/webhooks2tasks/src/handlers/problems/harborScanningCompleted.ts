@@ -76,29 +76,38 @@ const DEFAULT_REPO_DETAILS_MATCHER = {
     const environmentResult = await getEnvironmentByOpenshiftProjectName(openshiftProjectName);
     const environmentDetails: any = R.prop('environmentByOpenshiftProjectName', environmentResult)
 
+    let size = 20; let batchedArrVulns = [];
+    if (vulnerabilities) {
+      for (let i = 0; i < vulnerabilities.length; i += size) {
+        batchedArrVulns.push(vulnerabilities.slice(i, i + size));
+      }
+    }
 
-    let messageBody = {
-      lagoonProjectId,
-      lagoonProjectName,
-      lagoonEnvironmentId: environmentDetails.id,
-      lagoonEnvironmentName: environmentDetails.name,
-      lagoonServiceName,
-      vulnerabilities,
-    };
+    if (batchedArrVulns) {
+      batchedArrVulns.forEach(async (element) => {
+        let messageBody = {
+          lagoonProjectId,
+          lagoonProjectName,
+          lagoonEnvironmentId: environmentDetails.id,
+          lagoonEnvironmentName: environmentDetails.name,
+          lagoonServiceName,
+          vulnerabilities: element,
+        };
 
-    const webhookData = generateWebhookData(
-      WebhookRequestData.giturl,
-      'problems',
-      'harbor:scanningresultfetched',
-      messageBody
-    );
+        const webhookData = generateWebhookData(
+          WebhookRequestData.giturl,
+          'problems',
+          'harbor:scanningresultfetched',
+          messageBody
+        );
 
-    const buffer = new Buffer(JSON.stringify(webhookData));
+        const buffer = new Buffer(JSON.stringify(webhookData));
 
-    await channelWrapperWebhooks.publish(`lagoon-webhooks`, '', buffer, {
-      persistent: true,
-    });
-
+        await channelWrapperWebhooks.publish(`lagoon-webhooks`, '', buffer, {
+          persistent: true,
+        });
+      });
+    }
   } catch (error) {
     sendToLagoonLogs(
       'error',
@@ -162,7 +171,6 @@ const generateError = (name, message) => {
 
 const matchRepositoryAgainstPatterns = (repoFullName, matchPatterns = []) => {
   const matchingRes = matchPatterns.filter((e) => generateRegex(e.regex).test(repoFullName));
-
   if(matchingRes.length > 1) {
     const stringifyMatchingRes = matchingRes.reduce((prevRetString, e) => `${e.regex},${prevRetString}`, '');
     throw generateError("InvalidHarborConfiguration",

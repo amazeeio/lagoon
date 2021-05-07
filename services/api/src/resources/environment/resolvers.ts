@@ -556,6 +556,7 @@ export const updateEnvironment: ResolverFn = async (
       routes: input.patch.routes,
       monitoringUrls: input.patch.monitoringUrls,
       autoIdle: input.patch.autoIdle,
+      created: input.patch.created,
     }
   }));
 

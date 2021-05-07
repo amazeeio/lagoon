@@ -90,7 +90,7 @@ export function extractWebhookData(req: IncomingMessage, body: string): WebhookR
       webhooktype = 'resticbackup';
       event = 'restore:finished';
       uuid = uuid4();
-    } else if (bodyObj.type && bodyObj.type == 'scanningCompleted') {
+    } else if (bodyObj.type && bodyObj.type == 'SCANNING_COMPLETED') {
       webhooktype = 'problems';
       event = 'harbor:scanningcompleted';
       uuid = uuid4();

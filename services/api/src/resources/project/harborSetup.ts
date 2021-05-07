@@ -69,7 +69,7 @@ async function createHarborProject(sqlClient: MariaClient, harborClient, lagoonP
     } else {
       results = res.body
     }
-    
+
     // Search array of objects for correct project
     for (let proj of results) {
       if (proj.name == lagoonProjectName) {
@@ -230,8 +230,8 @@ async function resetHarborWebhook(sqlClient: MariaClient, harborClient, lagoonPr
           }
         ],
         event_types: [
-          "scanningFailed",
-          "scanningCompleted"
+          "SCANNING_FAILED",
+          "SCANNING_COMPLETED"
         ],
         name: "Lagoon Default Webhook",
         enabled: true

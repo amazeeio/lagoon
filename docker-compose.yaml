@@ -150,9 +150,7 @@ services:
     image: ${IMAGE_REPO:-lagoon}/tests
     environment:
       - CLUSTER_TYPE=control-k8s
-      - WEBHOOK_HOST=webhook-handler
-      - WEBHOOK_PORT=3000
-      - WEBHOOK_PROTOCOL=http
+      - WEBHOOK_URL=http://webhook-handler:3000
       - ROUTE_SUFFIX_HTTP=172.17.0.1.nip.io
       - ROUTE_SUFFIX_HTTP_PORT=18080
       - ROUTE_SUFFIX_HTTPS=172.17.0.1.nip.io
@@ -173,9 +171,7 @@ services:
     image: ${IMAGE_REPO:-lagoon}/tests
     environment:
       - CLUSTER_TYPE=openshift
-      - WEBHOOK_HOST=webhook-handler
-      - WEBHOOK_PORT=3000
-      - WEBHOOK_PROTOCOL=http
+      - WEBHOOK_URL=http://webhook-handler:3000
       - ROUTE_SUFFIX_HTTP=192.168.42.103.nip.io
       - ROUTE_SUFFIX_HTTP_PORT=80
       - ROUTE_SUFFIX_HTTPS=192.168.42.103.nip.io

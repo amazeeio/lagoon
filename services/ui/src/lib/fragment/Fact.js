@@ -7,5 +7,6 @@ export default gql`
     value
     source
     description
+    type
   }
 `;

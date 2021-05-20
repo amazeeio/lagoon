@@ -76,7 +76,11 @@ const Facts = ({ facts }) => {
                                 <div className="description">{fact.description}</div>
                             </div>
                             <div className="col col-2">{fact.source}</div>
-                            <div className="col col-3">{fact.value}</div>
+                            { fact.type == "URL"
+                              ? <div className="col col-3"><a className="external-link" href={fact.value} target="_blank">{fact.value}</a></div>
+                              : <div className="col col-3">{fact.value}</div>
+                            }
+
                         </div>
                     );
                 })}
@@ -203,6 +207,12 @@ const Facts = ({ facts }) => {
                 .description {
                   font-style: italic;
                   font-size: 12px;
+                }
+
+                a.external-link {
+                  color: ${color.brightBlue};
+                  text-decoration: underline;
+                  font-style: italic;
                 }
               }
 

@@ -117,6 +117,11 @@ const typeDefs = gql`
     CRITICAL
   }
 
+  enum FactType {
+    TEXT
+    URL
+  }
+
   scalar SeverityScore
 
   type Problem {
@@ -202,6 +207,7 @@ const typeDefs = gql`
     value: String
     source: String
     description: String
+    type: FactType
   }
 
   input AddFactInput {
@@ -211,20 +217,22 @@ const typeDefs = gql`
     value: String!
     source: String!
     description: String!
+    type: FactType
   }
-  
+
   input AddFactsInput {
     facts: [AddFactInput]!
   }
-  
+
   input UpdateFactInputValue {
     environment: Int!
     name: String!
     value: String!
     source: String!
     description: String
+    type: FactType
   }
-  
+
   input UpdateFactInput {
     environment: Int!
     patch: UpdateFactInputValue!
@@ -234,7 +242,7 @@ const typeDefs = gql`
     environment: Int!
     name: String!
   }
-  
+
   input DeleteFactsFromSourceInput {
     environment: Int!
     source: String!

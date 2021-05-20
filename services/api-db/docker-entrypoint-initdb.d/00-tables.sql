@@ -281,6 +281,7 @@ CREATE TABLE IF NOT EXISTS environment_fact (
   environment              int REFERENCES environment (id),
   name                     varchar(300) NOT NULL,
   value                    varchar(300) NOT NULL,
+  type                     ENUM('TEXT', 'URL') DEFAULT 'TEXT',
   source                   varchar(300) DEFAULT '',
   description              TEXT NULL    DEFAULT '',
   created                  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

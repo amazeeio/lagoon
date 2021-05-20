@@ -43,7 +43,7 @@ export const addFact = async (
   root,
   {
     input: {
-      id, environment: environmentId, name, value, source, description
+      id, environment: environmentId, name, value, source, description, type
     },
   },
   { sqlClient, hasPermission },
@@ -64,7 +64,8 @@ export const addFact = async (
       name,
       value,
       source,
-      description
+      description,
+      type
     }),
   );
 
@@ -93,7 +94,7 @@ export const addFacts = async (
   });
 
   return await facts.map(async (fact) => {
-    const { environment, name, value, source, description } = fact;
+    const { environment, name, value, source, description, type } = fact;
 
     const {
       info: { insertId },
@@ -104,7 +105,8 @@ export const addFacts = async (
         name,
         value,
         source,
-        description
+        description,
+        type
       }),
     );
 

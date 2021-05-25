@@ -97,6 +97,7 @@ export const Sql = {
     return q.toString();
   },
   insertProblem: ({
+    id,
     environment,
     severity,
     severity_score,
@@ -113,6 +114,7 @@ export const Sql = {
   }) =>
     knex('environment_problem')
       .insert({
+        id,
         environment,
         severity,
         severity_score,

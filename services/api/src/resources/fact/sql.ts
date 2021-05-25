@@ -20,9 +20,9 @@ export const Sql = {
       .where('environment', environmentId)
       .toString();
   },
-  insertFact: ({ environment, name, value, source, description }) =>
+  insertFact: ({ id, environment, name, value, source, description }) =>
     knex('environment_fact')
-      .insert({ environment, name, value, source, description })
+      .insert({ id, environment, name, value, source, description })
       .toString(),
   deleteFact: (environment, name) =>
     knex('environment_fact')

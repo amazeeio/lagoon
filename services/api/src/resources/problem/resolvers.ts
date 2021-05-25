@@ -124,6 +124,7 @@ export const addProblem: ResolverFn = async (
   root,
   {
     input: {
+      id,
       severity,
       environment: environmentId,
       identifier,
@@ -152,6 +153,7 @@ export const addProblem: ResolverFn = async (
   const { insertId } = await query(
     sqlClientPool,
     Sql.insertProblem({
+      id,
       severity,
       severity_score: severityScore,
       lagoon_service: service || '',

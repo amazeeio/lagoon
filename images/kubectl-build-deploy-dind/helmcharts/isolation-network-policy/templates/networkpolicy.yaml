@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "isolation-network-policy.fullname" . }}
+  labels:
+    {{- include "isolation-network-policy.labels" . | nindent 4 }}
+  annotations:
+    {{- include "isolation-network-policy.annotations" . | nindent 4 }}
+spec:
+  # empty podSelector applies this policy to _all_ pods in the current
+  # namespace.
+  podSelector: {}
+  ingress:
+  - from:
+    # empty ingress podSelector means traffic from _all_ pods in the current
+    # namespace are allowed ingress.
+    - podSelector: {}
+    # allow network traffic from the ingress controller
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx

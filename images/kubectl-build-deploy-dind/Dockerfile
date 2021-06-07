@@ -1,12 +1,10 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/kubectl
 
-# the kubectl image comes with an HOME=/home which is needed to run as unpriviledged, but kubectl-build-deploy-dind will run as root
-RUN rm -rf /root && ln -s /home /root
 ENV LAGOON=kubectl-build-deploy-dind
 
-RUN  mkdir -p /kubectl-build-deploy/git
-RUN  mkdir -p /kubectl-build-deploy/lagoon
+RUN mkdir -p /kubectl-build-deploy/git
+RUN mkdir -p /kubectl-build-deploy/lagoon
 
 WORKDIR /kubectl-build-deploy/git
 
@@ -19,5 +17,8 @@ COPY scripts /kubectl-build-deploy/scripts
 COPY helmcharts  /kubectl-build-deploy/helmcharts
 
 ENV IMAGECACHE_REGISTRY=imagecache.amazeeio.cloud
+
+# enable running unprivileged
+RUN fix-permissions /home && fix-permissions /kubectl-build-deploy
 
 CMD ["/kubectl-build-deploy/build-deploy.sh"]

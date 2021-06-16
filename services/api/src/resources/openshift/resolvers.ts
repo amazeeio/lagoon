@@ -68,7 +68,7 @@ export const getOpenshiftByProjectId: ResolverFn = async (
   { sqlClientPool, hasPermission }
 ) => {
   await hasPermission('openshift', 'view', {
-    project: pid,
+    project: pid
   });
 
   const rows = await query(
@@ -100,7 +100,7 @@ export const updateOpenshift: ResolverFn = async (
   }
 
   await query(sqlClientPool, Sql.updateOpenshift(input));
-  const rows = await query(sqlClientPool, Sql.selectOpenshift(oid));
+  const rows = await query(sqlClientPool, Sql.selectOpenshiftById(oid));
 
   return R.prop(0, rows);
 };

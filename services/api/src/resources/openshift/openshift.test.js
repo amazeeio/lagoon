@@ -6,17 +6,17 @@ describe('Sql', () => {
       const input = {
         id: 1,
         patch: {
-          name: 'test',
-        },
+          name: 'test'
+        }
       };
 
       const ret = Sql.updateOpenshift(input);
       expect(ret).toMatchSnapshot();
     });
   });
-  describe('selectOpenshift', () => {
+  describe('selectOpenshiftById', () => {
     it('should create a proper statement', () => {
-      const ret = Sql.selectOpenshift(1);
+      const ret = Sql.selectOpenshiftById(1);
       expect(ret).toMatchSnapshot();
     });
   });

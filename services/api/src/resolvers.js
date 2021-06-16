@@ -7,11 +7,10 @@ const {
   addProblem,
   deleteProblem,
   deleteProblemsFromSource,
-  addProblemsFromSource,
   getProblemSources,
   getProblemHarborScanMatches,
   addProblemHarborScanMatch,
-  deleteProblemHarborScanMatch,
+  deleteProblemHarborScanMatch
 } = require('./resources/problem/resolvers');
 
 const {
@@ -19,16 +18,12 @@ const {
   addFact,
   addFacts,
   deleteFact,
-  deleteFactsFromSource,
+  deleteFactsFromSource
 } = require('./resources/fact/resolvers');
 
-const {
-  SeverityScoreType
-} = require('./resources/problem/types');
+const { SeverityScoreType } = require('./resources/problem/types');
 
-const {
-  getLagoonVersion,
-} = require('./resources/lagoon/resolvers');
+const { getLagoonVersion } = require('./resources/lagoon/resolvers');
 
 const {
   getDeploymentsByEnvironmentId,
@@ -60,13 +55,13 @@ const {
   taskDrushSqlSync,
   taskDrushRsyncFiles,
   taskDrushUserLogin,
-  taskSubscriber,
+  taskSubscriber
 } = require('./resources/task/resolvers');
 
 const {
   getFilesByTaskId,
   uploadFilesForTask,
-  deleteFilesForTask,
+  deleteFilesForTask
 } = require('./resources/file/resolvers');
 
 const {
@@ -90,8 +85,7 @@ const {
   updateEnvironment,
   getAllEnvironments,
   deleteAllEnvironments,
-  userCanSshToEnvironment,
-  getEnvironmentUrl
+  userCanSshToEnvironment
 } = require('./resources/environment/resolvers');
 
 const {
@@ -114,7 +108,7 @@ const {
   deleteAllNotificationSlacks,
   deleteAllNotificationMicrosoftTeams,
   deleteAllNotificationRocketChats,
-  removeAllNotificationsFromAllProjects,
+  removeAllNotificationsFromAllProjects
 } = require('./resources/notification/resolvers');
 
 const {
@@ -123,7 +117,7 @@ const {
   getAllOpenshifts,
   getOpenshiftByProjectId,
   updateOpenshift,
-  deleteAllOpenshifts,
+  deleteAllOpenshifts
 } = require('./resources/openshift/resolvers');
 
 const {
@@ -132,11 +126,11 @@ const {
   getProjectByName,
   getProjectByGitUrl,
   getProjectByEnvironmentId,
+  getProjectsByKubernetes,
   getProjectsByMetadata,
   getAllProjects,
   updateProject,
   deleteAllProjects,
-  getProjectUrl,
   updateProjectMetadata,
   removeProjectMetadataByKey
 } = require('./resources/project/resolvers');
@@ -148,7 +142,7 @@ const {
   deleteSshKey,
   deleteSshKeyById,
   deleteAllSshKeys,
-  removeAllSshKeysFromAllUsers,
+  removeAllSshKeysFromAllUsers
 } = require('./resources/sshKey/resolvers');
 
 const {
@@ -157,7 +151,7 @@ const {
   addUser,
   updateUser,
   deleteUser,
-  deleteAllUsers,
+  deleteAllUsers
 } = require('./resources/user/resolvers');
 
 const {
@@ -181,7 +175,7 @@ const {
   addUserToGroup,
   removeUserFromGroup,
   addGroupsToProject,
-  removeGroupsFromProject,
+  removeGroupsFromProject
 } = require('./resources/group/resolvers');
 
 const {
@@ -201,14 +195,14 @@ const {
   addRestore,
   getRestoreByBackupId,
   updateRestore,
-  backupSubscriber,
+  backupSubscriber
 } = require('./resources/backup/resolvers');
 
 const {
   getEnvVarsByProjectId,
   getEnvVarsByEnvironmentId,
   addEnvVariable,
-  deleteEnvVariable,
+  deleteEnvVariable
 } = require('./resources/env-variables/resolvers');
 
 const resolvers = {
@@ -217,40 +211,40 @@ const resolvers = {
     REPORTER: 'reporter',
     DEVELOPER: 'developer',
     MAINTAINER: 'maintainer',
-    OWNER: 'owner',
+    OWNER: 'owner'
   },
   ProjectOrderType: {
     NAME: 'name',
-    CREATED: 'created',
+    CREATED: 'created'
   },
   EnvOrderType: {
     NAME: 'name',
-    UPDATED: 'updated',
+    UPDATED: 'updated'
   },
   DeployType: {
     BRANCH: 'branch',
     PULLREQUEST: 'pullrequest',
-    PROMOTE: 'promote',
+    PROMOTE: 'promote'
   },
   EnvType: {
     PRODUCTION: 'production',
-    DEVELOPMENT: 'development',
+    DEVELOPMENT: 'development'
   },
   EnvVariableType: {
     PROJECT: 'project',
-    ENVIRONMENT: 'environment',
+    ENVIRONMENT: 'environment'
   },
   EnvVariableScope: {
     BUILD: 'build',
     RUNTIME: 'runtime',
     GLOBAL: 'global',
     CONTAINER_REGISTRY: 'container_registry',
-    INTERNAL_CONTAINER_REGISTRY: 'internal_container_registry',
+    INTERNAL_CONTAINER_REGISTRY: 'internal_container_registry'
   },
   RestoreStatusType: {
     PENDING: 'pending',
     SUCCESSFUL: 'successful',
-    FAILED: 'failed',
+    FAILED: 'failed'
   },
   DeploymentStatusType: {
     NEW: 'new',
@@ -259,22 +253,22 @@ const resolvers = {
     CANCELLED: 'cancelled',
     ERROR: 'error',
     FAILED: 'failed',
-    COMPLETE: 'complete',
+    COMPLETE: 'complete'
   },
   NotificationType: {
     SLACK: 'slack',
     ROCKETCHAT: 'rocketchat',
     MICROSOFTTEAMS: 'microsoftteams',
-    EMAIL: 'email',
+    EMAIL: 'email'
   },
   NotificationContentType: {
     DEPLOYMENT: 'deployment',
-    PROBLEM: 'problem',
+    PROBLEM: 'problem'
   },
   TaskStatusType: {
     ACTIVE: 'active',
     SUCCEEDED: 'succeeded',
-    FAILED: 'failed',
+    FAILED: 'failed'
   },
   Project: {
     notifications: getNotificationsByProjectId,
@@ -282,7 +276,7 @@ const resolvers = {
     kubernetes: getOpenshiftByProjectId,
     environments: getEnvironmentsByProjectId,
     envVariables: getEnvVarsByProjectId,
-    groups: getGroupsByProjectId,
+    groups: getGroupsByProjectId
   },
   GroupInterface: {
     __resolveType(group) {
@@ -292,14 +286,14 @@ const resolvers = {
         default:
           return 'Group';
       }
-    },
+    }
   },
   Group: {
-    projects: getAllProjectsByGroupId,
+    projects: getAllProjectsByGroupId
   },
   BillingGroup: {
     projects: getAllProjectsByGroupId,
-    modifiers: getAllModifiersByGroupId,
+    modifiers: getAllModifiersByGroupId
   },
   Environment: {
     project: getProjectByEnvironmentId,
@@ -313,15 +307,15 @@ const resolvers = {
     envVariables: getEnvVarsByEnvironmentId,
     services: getEnvironmentServicesByEnvironmentId,
     problems: getProblemsByEnvironmentId,
-    facts: getFactsByEnvironmentId,
+    facts: getFactsByEnvironmentId
   },
   Deployment: {
     environment: getEnvironmentByDeploymentId,
-    uiLink: getDeploymentUrl,
+    uiLink: getDeploymentUrl
   },
   Task: {
     environment: getEnvironmentByTaskId,
-    files: getFilesByTaskId,
+    files: getFilesByTaskId
   },
   Notification: {
     __resolveType(obj) {
@@ -337,15 +331,15 @@ const resolvers = {
         default:
           return null;
       }
-    },
+    }
   },
   User: {
     sshKeys: getUserSshKeys,
-    groups: getGroupsByUserId,
+    groups: getGroupsByUserId
   },
   Backup: {
     restore: getRestoreByBackupId,
-    environment: getEnvironmentByBackupId,
+    environment: getEnvironmentByBackupId
   },
   Query: {
     me: getMe,
@@ -353,6 +347,7 @@ const resolvers = {
     userBySshKey: getUserBySshKey,
     projectByGitUrl: getProjectByGitUrl,
     projectByName: getProjectByName,
+    projectsByKubernetes: getProjectsByKubernetes,
     groupByName: getGroupByName,
     problemSources: getProblemSources,
     environmentByName: getEnvironmentByName,
@@ -480,16 +475,16 @@ const resolvers = {
     addBillingModifier,
     updateBillingModifier,
     deleteBillingModifier,
-    deleteAllBillingModifiersByBillingGroup,
+    deleteAllBillingModifiersByBillingGroup
   },
   Subscription: {
     backupChanged: backupSubscriber,
     deploymentChanged: deploymentSubscriber,
-    taskChanged: taskSubscriber,
+    taskChanged: taskSubscriber
   },
   Date: GraphQLDate,
   JSON: GraphQLJSON,
-  SeverityScore: SeverityScoreType,
+  SeverityScore: SeverityScoreType
 };
 
 module.exports = resolvers;

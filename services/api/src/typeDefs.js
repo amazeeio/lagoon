@@ -762,6 +762,12 @@ const typeDefs = gql`
     key: String!
   }
 
+  # Must provide id OR name
+  input KubernetesInput {
+    id: Int
+    name: String
+  }
+
 
   type Query {
     """
@@ -776,6 +782,10 @@ const typeDefs = gql`
     Returns Project Object by a given name
     """
     projectByName(name: String!): Project
+    """
+    Returns all Project Objects for a specified Kubernetes
+    """
+    projectsByKubernetes(kubernetes: KubernetesInput!, order: ProjectOrderType, createdAfter: String): [Project]
     """
     Returns Group Object by a given name
     """

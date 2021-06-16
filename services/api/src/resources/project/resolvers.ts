@@ -10,6 +10,7 @@ import { OpendistroSecurityOperations } from '../group/opendistroSecurity';
 import { Sql } from './sql';
 import { generatePrivateKey, getSshKeyFingerprint } from '../sshKey';
 import { Sql as sshKeySql } from '../sshKey/sql';
+import { Helpers as openshiftHelpers } from '../openshift/helpers';
 import { createHarborOperations } from './harborSetup';
 
 const removePrivateKey = R.assoc('privateKey', null);
@@ -169,6 +170,68 @@ export const getProjectByName: ResolverFn = async (
   }
 };
 
+export const getProjectsByKubernetes: ResolverFn = async (
+  _,
+  { kubernetes, order, createdAfter },
+  { sqlClientPool, hasPermission, models, keycloakGrant }
+) => {
+  const openshift = await openshiftHelpers(
+    sqlClientPool
+  ).getOpenshiftByOpenshiftInput(kubernetes);
+
+  let userProjectIds: number[];
+  try {
+    await hasPermission('project', 'viewAll');
+    await hasPermission('openshift', 'viewAll');
+  } catch (err) {
+    if (!keycloakGrant) {
+      logger.warn('No grant available for getProjectsByKubernetes');
+      return [];
+    }
+
+    // Only return projects the user can view
+    userProjectIds = await models.UserModel.getAllProjectsIdsForUser({
+      id: keycloakGrant.access_token.content.sub
+    });
+  }
+
+  let queryBuilder = knex('project').where('openshift', openshift.id);
+
+  if (userProjectIds) {
+    // A user that can view a project might not be able to view an openshift
+    let projectsWithOpenshiftViewPermission: number[] = [];
+    for (const pid of userProjectIds) {
+      try {
+        await hasPermission('openshift', 'view', {
+          project: pid
+        });
+        projectsWithOpenshiftViewPermission = [
+          ...projectsWithOpenshiftViewPermission,
+          pid
+        ];
+      } catch {}
+    }
+
+    queryBuilder = queryBuilder.whereIn(
+      'id',
+      projectsWithOpenshiftViewPermission
+    );
+  }
+
+  if (createdAfter) {
+    queryBuilder = queryBuilder.andWhere('created', '>=', createdAfter);
+  }
+
+  if (order) {
+    queryBuilder = queryBuilder.orderBy(order);
+  }
+
+  const rows = await query(sqlClientPool, queryBuilder.toString());
+  const withK8s = Helpers(sqlClientPool).aliasOpenshiftToK8s(rows);
+
+  return withK8s;
+};
+
 export const getProjectsByMetadata: ResolverFn = async (
   root,
   { metadata },
@@ -202,7 +265,9 @@ export const getProjectsByMetadata: ResolverFn = async (
     }
     // Support key-only queries.
     else {
-      queryBuilder = queryBuilder.whereRaw("JSON_CONTAINS_PATH(metadata, 'one', ?)");
+      queryBuilder = queryBuilder.whereRaw(
+        "JSON_CONTAINS_PATH(metadata, 'one', ?)"
+      );
       queryArgs = [...queryArgs, `$.${meta_key}`];
     }
   }

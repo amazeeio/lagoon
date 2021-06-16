@@ -1,5 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Sql selectOpenshift should create a proper statement 1`] = `"select * from \`openshift\` where \`id\` = 1"`;
+exports[`Sql selectOpenshiftById should create a proper statement 1`] = `"select * from \`openshift\` where \`id\` = 1"`;
 
 exports[`Sql updateOpenshift should create a proper statement 1`] = `"update \`openshift\` set \`name\` = 'test' where \`id\` = 1"`;

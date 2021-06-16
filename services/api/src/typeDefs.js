@@ -187,6 +187,7 @@ const typeDefs = gql`
   input DeleteProblemInput {
     environment: Int!
     identifier: String!
+    service: String
   }
 
   input DeleteProblemsFromSourceInput {

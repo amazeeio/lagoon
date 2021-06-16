@@ -177,7 +177,7 @@ export const addProblem: ResolverFn = async (
 
 export const deleteProblem: ResolverFn = async (
   root,
-  { input: { environment: environmentId, identifier } },
+  { input: { environment: environmentId, identifier, service } },
   { sqlClientPool, hasPermission }
 ) => {
   const environment = await environmentHelpers(
@@ -188,7 +188,7 @@ export const deleteProblem: ResolverFn = async (
     project: environment.project
   });
 
-  await query(sqlClientPool, Sql.deleteProblem(environmentId, identifier));
+  await query(sqlClientPool, Sql.deleteProblem(environmentId, identifier, service));
 
   return 'success';
 };

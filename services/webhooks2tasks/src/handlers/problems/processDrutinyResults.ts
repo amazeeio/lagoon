@@ -141,7 +141,7 @@ export async function processDrutinyResultset(
                     '',
                     uuid,
                     `${webhooktype}:${event}:problem_insert_error`,
-                    { data: body },
+                    {},
                     `Error inserting problem id ${element.id} for ${lagoonProjectId}:${environmentDetails.id} -- ${error.message}`
                   )
                 );
@@ -153,7 +153,7 @@ export async function processDrutinyResultset(
       '',
       uuid,
       `${webhooktype}:${event}:unhandled`,
-      { data: body },
+      {},
       `Could not process incoming Drutiny scan results, reason: ${error}`
     );
   }

@@ -24,6 +24,7 @@ else
     CONTAINER_PARAMETER="-c ${CONTAINER}"
   fi
 
-  oc -n ${OPENSHIFT_PROJECT} exec ${POD} ${CONTAINER_PARAMETER} -i -- ${SHELL} -c "${COMMAND}"
+  # Container entrypoints aren't automatically invoked for `oc exec` or `oc rsh`
+  oc -n ${OPENSHIFT_PROJECT} exec ${POD} ${CONTAINER_PARAMETER} -i -- /lagoon/entrypoints.sh ${SHELL} -c "${COMMAND}"
 
 fi

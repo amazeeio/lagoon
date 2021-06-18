@@ -82,8 +82,15 @@ environments:
        schedule: "H * * * *" # This will run the cron once per hour.
        command: drush cron
        service: cli
+  feature/feature-branch:
+    cronjobs:
+     - name: drush cron
+       schedule: "H * * * *" # This will run the cron once per hour.
+       command: drush cron
+       service: cli
 ```
 
+> Note: You can define feature branch tasks when Lagoon unlike other Lagoon processes it looks for the branch name directly.
 
 ## General Settings
 

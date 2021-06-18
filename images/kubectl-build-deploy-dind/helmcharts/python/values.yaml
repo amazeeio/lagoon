@@ -29,6 +29,12 @@ service:
   type: ClusterIP
   port: 8800
 
+## example fastly block
+fastly:
+  watch: false
+#   serviceId: ''
+#   apiSecretName: ''
+
 resources:
   # limits:
   #   cpu: 100m

@@ -31,6 +31,12 @@ service:
   type: ClusterIP
   port: 8080
 
+## example fastly block
+fastly:
+  watch: false
+#   serviceId: ''
+#   apiSecretName: ''
+
 resources:
   nginx:
     # limits:

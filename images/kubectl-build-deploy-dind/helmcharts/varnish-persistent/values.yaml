@@ -40,6 +40,12 @@ service:
   type: ClusterIP
   port: 8080
 
+## example fastly block
+fastly:
+  watch: false
+#   serviceId: ''
+#   apiSecretName: ''
+
 ingress:
   enabled: false
   annotations: {}

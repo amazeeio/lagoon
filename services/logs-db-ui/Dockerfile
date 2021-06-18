@@ -63,6 +63,7 @@ opendistro_security.cookie.password: "${OPENDISTRO_SECURITY_COOKIE_PASSWORD:-aaa
 ' >> config/kibana.yml
 
 RUN bin/kibana-plugin --allow-root install https://d3g5vo6xdbdb9a.cloudfront.net/downloads/kibana-plugins/opendistro-security/opendistro_security_kibana_plugin-1.6.0.0.zip
+COPY opendistro_security.js /usr/share/kibana/plugins/opendistro_security/lib/backend/opendistro_security.js
 
 COPY entrypoints/80-keycloak-url.bash /lagoon/entrypoints/
 COPY entrypoints/81-logs-db-ui-url.bash /lagoon/entrypoints/

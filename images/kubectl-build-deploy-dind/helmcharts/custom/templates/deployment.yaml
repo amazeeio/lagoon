@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "custom.fullname" . }}
+  labels:
+    {{- include "custom.labels" . | nindent 4 }}
+  annotations:
+    {{- include "custom.annotations" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "custom.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "custom.labels" . | nindent 8 }}
+      annotations:
+        {{- include "custom.annotations" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name | quote }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ .Values.image | quote }}
+          imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
+          env:
+            - name: LAGOON_GIT_SHA
+              value: {{ .Values.gitSha | quote }}
+            - name: SERVICE_NAME
+              value: {{ .Release.Name | quote }}
+          envFrom:
+            - configMapRef:
+                name: lagoon-env
+          ports:
+            - name: 9600-tcp
+              containerPort: 9600
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: 9600
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 9600
+            initialDelaySeconds: 120
+            timeoutSeconds: 1
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

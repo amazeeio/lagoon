@@ -1,0 +1,71 @@
+{{- range $cronjobName, $cronjobConfig := .Values.nativeCronjobs }}
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cronjob-{{ $.Release.Name }}-{{ $cronjobName }}
+  labels:
+    {{- include "custom.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "custom.annotations" $ | nindent 4 }}
+spec:
+  schedule: {{ $cronjobConfig.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+      labels:
+        {{- include "custom.labels" $ | nindent 8 }}
+      annotations:
+        {{- include "custom.annotations" $ | nindent 8 }}
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            {{- include "custom.labels" $ | nindent 12 }}
+          annotations:
+            {{- include "custom.annotations" $ | nindent 12 }}
+        spec:
+        {{- with $.Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
+          priorityClassName: {{ include "custom.lagoonPriority" $ }}
+          enableServiceLinks: false
+          securityContext:
+            {{- toYaml $.Values.podSecurityContext | nindent 12 }}
+          containers:
+            - image: {{ $.Values.image | quote }}
+              name: cronjob-{{ $.Release.Name }}-{{ $cronjobName }}
+              securityContext:
+                {{- toYaml $.Values.securityContext | nindent 16 }}
+              imagePullPolicy: {{ $.Values.imagePullPolicy }}
+              command:
+                - /lagoon/cronjob.sh
+                - {{ $cronjobConfig.command }}
+              env:
+                - name: LAGOON_GIT_SHA
+                  value: {{ $.Values.gitSha | quote }}
+                - name: SERVICE_NAME
+                  value: {{ $.Release.Name | quote }}
+              envFrom:
+                - configMapRef:
+                    name: lagoon-env
+              resources:
+                {{- toYaml $.Values.resources | nindent 16 }}
+          restartPolicy: Never
+          {{- with $.Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml $ | nindent 12 }}
+          {{- end }}
+        {{- with $.Values.affinity }}
+          affinity:
+            {{- toYaml $ | nindent 12 }}
+        {{- end }}
+        {{- with $.Values.tolerations }}
+          tolerations:
+            {{- toYaml $ | nindent 12 }}
+        {{- end }}
+{{- end }}

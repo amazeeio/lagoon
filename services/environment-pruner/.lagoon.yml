@@ -1,0 +1,141 @@
+apiVersion: v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: lagoon-openshift-template-cli
+parameters:
+  - name: SERVICE_NAME
+    description: Name of this service
+    required: true
+  - name: SAFE_BRANCH
+    description: Which branch this belongs to, special chars replaced with dashes
+    required: true
+  - name: SAFE_PROJECT
+    description: Which project this belongs to, special chars replaced with dashes
+    required: true
+  - name: BRANCH
+    description: Which branch this belongs to, original value
+    required: true
+  - name: PROJECT
+    description: Which project this belongs to, original value
+    required: true
+  - name: LAGOON_GIT_SHA
+    description: git hash sha of the current deployment
+    required: true
+  - name: SERVICE_ROUTER_URL
+    description: URL of the Router for this service
+    value: ""
+  - name: OPENSHIFT_PROJECT
+    description: Name of the Project that this service is in
+    required: true
+  - name: REGISTRY
+    description: Registry where Images are pushed to
+    required: true
+  - name: DEPLOYMENT_STRATEGY
+    description: Strategy of Deploymentconfig
+    value: "Rolling"
+  - name: SERVICE_IMAGE
+    description: Pullable image of service
+    required: true
+  - name: CRONJOBS
+    description: Oneliner of Cronjobs
+    value: ""
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      service: ${SERVICE_NAME}
+      branch: ${SAFE_BRANCH}
+      project: ${SAFE_PROJECT}
+    name: ${SERVICE_NAME}
+  spec:
+    replicas: 1
+    selector:
+      service: ${SERVICE_NAME}
+    strategy:
+      type: ${DEPLOYMENT_STRATEGY}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          service: ${SERVICE_NAME}
+          branch: ${SAFE_BRANCH}
+          project: ${SAFE_PROJECT}
+      spec:
+        volumes:
+          - name: lagoon-sshkey
+            secret:
+              defaultMode: 420
+              secretName: lagoon-sshkey
+        containers:
+        - image: ${SERVICE_IMAGE}
+          name: ${SERVICE_NAME}
+          envFrom:
+          - configMapRef:
+              name: lagoon-env
+          env:
+            ## LAGOON_GIT_SHA is injected directly and not loaded via `lagoon-env` config
+            ## This will cause the cli to redeploy on every deployment, even the files have not changed
+            - name: LAGOON_GIT_SHA
+              value: ${LAGOON_GIT_SHA}
+            - name: SERVICE_NAME
+              value: ${SERVICE_NAME}
+            - name: CRONJOBS
+              value: ${CRONJOBS}
+            - name: JWTSECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwtsecret
+                  key: JWTSECRET
+            - name: LOGSDB_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: LOGSDB_ADMIN_PASSWORD
+                  name: logs-db-admin-password
+          volumeMounts:
+            - mountPath: /var/run/secrets/lagoon/sshkey/
+              name: lagoon-sshkey
+              readOnly: true
+          resources:
+            requests:
+              cpu: 10m
+              memory: 10Mi
+    test: false
+    triggers:
+    - type: ConfigChange
+- apiVersion: batch/v1beta1
+  kind: CronJob
+  metadata:
+    name: cronjob-remote
+  spec:
+    schedule: "0 0 * * *"
+    suspend: false
+    concurrencyPolicy: Forbid
+    jobTemplate:
+      spec:
+        template:
+          metadata:
+            annotations:
+              alpha.image.policy.openshift.io/resolve-names: "*"
+            labels:
+              cronjob: prune-environments
+              parent: cronjob-remote
+          spec:
+            containers:
+            - name: prune-environments
+              image: ${REGISTRY}/${OPENSHIFT_PROJECT}/${SERVICE_NAME}:latest
+              command:
+                - /lagoon/cronjob.sh
+                - "/prune.sh"
+              envFrom:
+              - configMapRef:
+                  name: lagoon-env
+              env:
+                - name: JWTSECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: jwtsecret
+                      key: JWTSECRET
+            restartPolicy: OnFailure

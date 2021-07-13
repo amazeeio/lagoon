@@ -224,8 +224,9 @@ do
       SERVICE_TYPE="mongodb-single"
     # heck if this cluster supports the default one, if not we assume that this cluster is not capable of shared MongoDB and we use a mongodb-single
     # real basic check to see if the MongoDBConsumer exists as a kind
-    elif [[ "${CAPABILITIES[@]}" =~ "mongodb.amazee.io/v1/MongoDBConsumer" ]]; then
-      SERVICE_TYPE="mongodb-dbaas"
+    # DISABLED until https://github.com/amazeeio/dbaas-operator/issues/38 is implemented
+    # elif [[ "${CAPABILITIES[@]}" =~ "mongodb.amazee.io/v1/MongoDBConsumer" ]]; then
+    #   SERVICE_TYPE="mongodb-dbaas"
     else
       SERVICE_TYPE="mongodb-single"
     fi

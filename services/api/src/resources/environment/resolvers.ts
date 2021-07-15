@@ -10,6 +10,7 @@ import { Helpers } from './helpers';
 import { Sql } from './sql';
 import { Sql as projectSql } from '../project/sql';
 import { Helpers as projectHelpers } from '../project/helpers';
+import { getFactFilteredEnvironmentIds } from '../fact/resolvers';
 
 export const getEnvironmentByName: ResolverFn = async (
   root,
@@ -59,10 +60,11 @@ export const getEnvironmentById = async (
 export const getEnvironmentsByProjectId: ResolverFn = async (
   project,
   args,
-  { sqlClientPool, hasPermission }
+  { sqlClientPool, hasPermission, keycloakGrant, models }
 ) => {
   const { id: pid } = project;
 
+  let isAdmin = false;
   // The getAllProjects resolver will authorize environment access already,
   // so we can skip the request to keycloak.
   //
@@ -72,6 +74,15 @@ export const getEnvironmentsByProjectId: ResolverFn = async (
     await hasPermission('environment', 'view', {
       project: pid
     });
+    isAdmin = true;
+  }
+
+  let filterEnvironments = false;
+  let filteredEnvironments = [];
+
+  if (args.factFilter && args.factFilter.filters && args.factFilter.filters.length !== 0) {
+    filterEnvironments = true;
+    filteredEnvironments = await getFactFilteredEnvironmentIds(args.factFilter, [project.id], sqlClientPool, isAdmin);
   }
 
   const rows = await query(
@@ -80,7 +91,8 @@ export const getEnvironmentsByProjectId: ResolverFn = async (
     FROM environment e
     WHERE e.project = :pid
     ${args.includeDeleted ? '' : 'AND deleted = "0000-00-00 00:00:00"'}
-    ${args.type ? 'AND e.environment_type = :type' : ''}`,
+    ${args.type ? 'AND e.environment_type = :type' : ''}
+    ${filterEnvironments && filteredEnvironments.length !== 0 ? `AND e.id in (${filteredEnvironments.join(",")})` : ''}`,
     { pid, type: args.type }
   );
   const withK8s = Helpers(sqlClientPool).aliasOpenshiftToK8s(rows);

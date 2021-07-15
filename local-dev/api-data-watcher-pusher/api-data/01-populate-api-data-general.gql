@@ -523,6 +523,96 @@ mutation PopulateApi {
     id
   }
 
+  UIProject1Environment1addFacts: addFacts(
+    input: {
+      facts: [
+          {
+            name: "lagoon-category"
+            value: "saas"
+            environment: 3
+            source: ""
+            description: "Category of the site"
+            category: "Lagoon"
+            keyFact: true
+          },
+          {
+            name: "drupal-core"
+            value: "9.0.1"
+            environment: 3
+            source: "drush-pml"
+            description: "Drupal CMS version found on environment"
+            category: "Framework"
+            keyFact: true
+          },
+          {
+            name: "php-version"
+            value: "8.0.3"
+            environment: 3
+            source: "php-version"
+            description: "PHP version found on environment"
+            category: "Programming language"
+            keyFact: true
+          },
+          {
+            name: "Lagoon"
+            value: "21.3.0"
+            environment: 3
+            source: "env"
+            description: "Lagoon version"
+            category: "Platform"
+            keyFact: true
+          },
+          {
+            name: "interesting-package"
+            value: "1.0.0"
+            environment: 3
+            source: "local-dev"
+            description: "Description of interesting php package"
+            category: "Composer package"
+          },
+          {
+            name: "npm-module"
+            value: "2.0.0"
+            environment: 3
+            source: "local-dev"
+            description: "Description of node module"
+            category: "Node package"
+          },
+          {
+            name: "site-code-status"
+            value: "200"
+            environment: 3
+            source: "curl"
+            description: "Health check of site"
+            category: "Performance"
+            keyFact: true
+          }
+      ]
+    }
+  ) {
+    id
+  }
+
+  UIProject1Environment1addFactReference1: addFactReference(
+    input: {
+        eid: 3
+        fid: 2
+        name: "nginx.high-cotton.org"
+    }
+  ) {
+    id
+  }
+
+  UIProject1Environment1addFactReference2: addFactReference(
+    input: {
+        eid: 3
+        fid: 2
+        name: "cli"
+    }
+  ) {
+    id
+  }
+
   UIProject1Environment2: addOrUpdateEnvironment(
     input: {
       id: 4
@@ -571,6 +661,77 @@ mutation PopulateApi {
   ) {
     id
   }
+
+  UIProject1Environment3addFacts: addFacts(
+    input: {
+       facts: [
+          {
+            name: "lagoon-category"
+            value: "saas"
+            environment: 5
+            source: ""
+            description: "Category of the site"
+            category: "Lagoon"
+            keyFact: true
+          },
+          {
+            name: "drupal-core"
+            value: "9.0.1"
+            environment: 5
+            source: "drush-pml"
+            description: "Drupal CMS version found on environment"
+            category: "Framework"
+            keyFact: true
+          },
+          {
+            name: "php-version"
+            value: "8.0.3"
+            environment: 5
+            source: "php-version"
+            description: "PHP version found on environment"
+            category: "Programming language"
+            keyFact: true
+          },
+          {
+            name: "Lagoon"
+            value: "21.3.0"
+            environment: 5
+            source: "env"
+            description: "Lagoon version"
+            category: "Platform"
+            keyFact: true
+          },
+          {
+            name: "interesting-package"
+            value: "1.0.0"
+            environment: 5
+            source: "local-dev"
+            description: "Description of interesting php package"
+            category: "Composer package"
+          },
+          {
+            name: "npm-module"
+            value: "2.0.0"
+            environment: 5
+            source: "local-dev"
+            description: "Description of node module"
+            category: "Node package"
+          },
+          {
+            name: "site-code-status"
+            value: "403"
+            environment: 5
+            source: "curl"
+            description: "Health check of site"
+            category: "Performance"
+            keyFact: true
+          }
+      ]
+    }
+  ) {
+    id
+  }
+
   UIProject1Environment4: addOrUpdateEnvironment(
     input: {
       id: 6

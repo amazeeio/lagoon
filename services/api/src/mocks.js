@@ -286,10 +286,13 @@ mocks.Environment = (parent, args = {}, context, info) => {
     storageMonth: mocks.EnvironmentStorageMonth(),
     hitsMonth: mocks.EnvironmentHitsMonth(),
     envVariables: [ mocks.EnvKeyValue() ],
-    route: name === 'master' ? `https://${project.name}.org` : '',
+    route: name === 'master' ? `https://${project.name}.org` : `https://${name}.${project.name}.org`,
     routes: `https://${project.name}.org,https://varnish-${project.name}-org-prod.us.amazee.io,https://nginx-${project.name}-org-prod.us.amazee.io`,
     monitoringUrls: '',
-    deployments: [],
+    deployments: [
+      mocks.Deployment(null, {environment: { created: new Date(mocks.Date()) }}),
+      mocks.Deployment(null, {environment: {}})
+    ],
     backups: [],
     tasks: [],
     problems: [
@@ -300,7 +303,15 @@ mocks.Environment = (parent, args = {}, context, info) => {
       mocks.Problem(),
       mocks.Problem()
     ],
-    services: [ mocks.EnvironmentService() ],
+    facts: [
+      mocks.Fact(null, { name: "php", value: "7.4", source: "php-version", category: "Programming Language", key: true} ),
+      mocks.Fact(null, { name: "Drupal", value: "9.0.12", source: "drupal-version", category: "Framework", key: true} ),
+      mocks.Fact(null, { name: "Lagoon", value: " 21.3.0", source: "env", category: "Platform", key: true} ),
+      mocks.Fact(null, { name: "Category", value: "company", source: "lagoon", category: "Custom", key: true} ),
+      mocks.Fact(),
+      mocks.Fact()
+    ],
+    services: [ mocks.EnvironmentService(), mocks.EnvironmentService(), mocks.EnvironmentService() ],
   };
   environment.project.environments.push(environment);
   return {
@@ -342,8 +353,33 @@ mocks.EnvironmentHoursMonth = () => {
 
 mocks.EnvironmentService = () => ({
   id: faker.random.number(),
-  name: faker.random.arrayElement(['cli', 'nginx', 'mariadb']),
+  name: faker.random.arrayElement(['cli', 'nginx', 'mariadb', 'solr', 'varnish', 'php']),
 });
+
+mocks.Fact = (parent, args = {}, context, info) => {
+  const id = `${faker.random.number({min: 0, max: 99999})}`;
+  const name = faker.random.arrayElement(['drupal-version', 'drush-version', 'admin_toolbar', 'drupal/core', 'laravel', 'composer-version']);
+  const value = faker.random.arrayElement(['8.0.1', '9.0.1', '3.2.1', '10.20.2', '4.3.4']);
+  const source = faker.random.arrayElement(['drush_pml', 'drush_status', 'http_header', 'php-version', 'env']);
+  const category = faker.random.arrayElement(['Application', 'Application technology', 'Docker configuration', 'Drupal configuration', 'Lagoon configuration', 'Platform', 'Programming Language']);
+  const description = faker.lorem.paragraph();
+  const environment = `${faker.random.number({min:0, max:5})}`;
+
+  const reference = args.hasOwnProperty('key') ? ['key'] : faker.random.arrayElement([
+    ['nginx.company.amazee.io', 'key'], ['cli'], ['solr'], ['php'], ['backend.company.amazee.io', 'key']
+  ]);
+
+  return {
+    id: id,
+    name: args.hasOwnProperty('name') ? args.name : name,
+    value: args.hasOwnProperty('value') ? args.value : value,
+    source: args.hasOwnProperty('source') ? args.source : source,
+    category: category,
+    description,
+    environment,
+    reference
+  };
+};
 
 mocks.Backup = (parent, args = {}, context, info) => {
   const date = mocks.Date();
@@ -374,7 +410,7 @@ mocks.Restore = (parent, args = {}, context, info) => {
 
 mocks.Deployment = (parent, args = {}, context, info) => {
   const id = faker.random.number();
-  const created = mocks.Date();
+  const created = args.hasOwnProperty('created') ? args.created : mocks.Date();
   const started = addTime(created, .5);
   const completed = addTime(started, .75);
   return {
@@ -493,7 +529,7 @@ mocks.Query = () => ({
   userCanSshToEnvironment: () => mocks.Environment(),
   deploymentByRemoteId: () => mocks.Deployment(),
   taskByRemoteId: () => mocks.Task(),
-  allProjects: () => new MockList(100),
+  allProjects: () => new MockList(200),
   allOpenshifts: () => new MockList(9),
   allProblems: () => new MockList(20),
   allEnvironments: (parent, args = {}, context, info) => {

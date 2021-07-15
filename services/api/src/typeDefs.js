@@ -118,6 +118,12 @@ const typeDefs = gql`
     CRITICAL
   }
 
+  enum FactType {
+    TEXT
+    URL
+    SEMVER
+  }
+
   scalar SeverityScore
 
   type Problem {
@@ -203,6 +209,10 @@ const typeDefs = gql`
     value: String
     source: String
     description: String
+    keyFact: Boolean
+    type: FactType
+    category: String
+    references: [FactReference]
   }
 
   input AddFactInput {
@@ -212,6 +222,9 @@ const typeDefs = gql`
     value: String!
     source: String!
     description: String!
+    keyFact: Boolean
+    type: FactType
+    category: String
   }
 
   input AddFactsInput {
@@ -224,6 +237,9 @@ const typeDefs = gql`
     value: String!
     source: String!
     description: String
+    keyFact: Boolean
+    type: FactType
+    category: String
   }
 
   input UpdateFactInput {
@@ -239,6 +255,61 @@ const typeDefs = gql`
   input DeleteFactsFromSourceInput {
     environment: Int!
     source: String!
+  }
+
+  type FactReference {
+    id: Int
+    fid: Int
+    name: String
+  }
+
+  input AddFactReferenceInput {
+    fid: Int!
+    name: String!
+  }
+
+  input UpdateFactReferenceInputValue {
+    fid: Int!
+    name: String
+  }
+
+  input UpdateFactReferenceInput {
+    fid: Int!
+    patch: UpdateFactReferenceInputValue!
+  }
+
+  input DeleteFactReferenceInput {
+    factName: String!
+    referenceName: String!
+    eid: Int!
+  }
+
+  input DeleteFactReferencesByFactIdInput {
+    fid: Int!
+  }
+
+  enum FactFilterConnective {
+    OR
+    AND
+  }
+
+  enum FactFilterLHSTarget {
+    FACT
+    ENVIRONMENT
+    PROJECT
+  }
+
+  input FactFilterAtom {
+    lhsTarget: FactFilterLHSTarget
+    name: String!
+    contains: String!
+  }
+  input FactFilterInput {
+    filterConnective: FactFilterConnective
+    filters: [FactFilterAtom]
+    skip: Int
+    take: Int
+    orderBy: String
   }
 
   type File {
@@ -541,6 +612,10 @@ const typeDefs = gql`
       Include deleted Environments (by default deleted environment are hidden)
       """
       includeDeleted: Boolean
+      """
+      Filter environments by fact matching
+      """
+      factFilter: FactFilterInput
     ): [Environment]
     """
     Creation Timestamp of Project
@@ -648,7 +723,7 @@ const typeDefs = gql`
     tasks(id: Int): [Task]
     services: [EnvironmentService]
     problems(severity: [ProblemSeverityRating], source: [String]): [Problem]
-    facts: [Fact]
+    facts(keyFacts: Boolean): [Fact]
   }
 
   type EnvironmentHitsMonth {
@@ -750,6 +825,16 @@ const typeDefs = gql`
     weight: Int
   }
 
+  type ProjectFactSearchResults {
+    count: Int
+    projects: [Project]
+  }
+
+  type EnvironmentFactSearchResults {
+    count: Int
+    environments: [Environment]
+  }
+
   input DeleteEnvironmentInput {
     name: String!
     project: String!
@@ -807,6 +892,19 @@ const typeDefs = gql`
     environmentByKubernetesNamespaceName(
       kubernetesNamespaceName: String!
     ): Environment
+    """
+    Return projects from a fact-based search
+    """
+    projectsByFactSearch(
+      input: FactFilterInput
+    ): ProjectFactSearchResults
+
+    """
+    Return environments from a fact-based search
+    """
+    environmentsByFactSearch(
+      input: FactFilterInput
+    ): EnvironmentFactSearchResults
     userCanSshToEnvironment(
       openshiftProjectName: String
       kubernetesNamespaceName: String
@@ -1638,6 +1736,9 @@ const typeDefs = gql`
     addFacts(input: AddFactsInput!): [Fact]
     deleteFact(input: DeleteFactInput!): String
     deleteFactsFromSource(input: DeleteFactsFromSourceInput!): String
+    addFactReference(input: AddFactReferenceInput!): FactReference
+    deleteFactReference(input: DeleteFactReferenceInput!): String
+    deleteAllFactReferencesByFactId(input: DeleteFactReferencesByFactIdInput!): String
     deleteBackup(input: DeleteBackupInput!): String
     deleteAllBackups: String
     addRestore(input: AddRestoreInput!): Restore

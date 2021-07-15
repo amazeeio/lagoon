@@ -281,12 +281,21 @@ CREATE TABLE IF NOT EXISTS environment_fact (
   environment              int REFERENCES environment (id),
   name                     varchar(300) NOT NULL,
   value                    varchar(300) NOT NULL,
+  type                     ENUM('TEXT', 'URL', 'SEMVER') DEFAULT 'TEXT',
   source                   varchar(300) DEFAULT '',
   description              TEXT NULL    DEFAULT '',
   created                  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  category                 TEXT NULL    DEFAULT '',
+  key_fact                 TINYINT(1) NOT NULL DEFAULT(0),
   UNIQUE(environment, name)
 );
 
+CREATE TABLE IF NOT EXISTS environment_fact_reference (
+  id      int NOT NULL auto_increment PRIMARY KEY,
+  fid     int NOT NULL REFERENCES environment_fact (id),
+  name    varchar(300) NOT NULL,
+  UNIQUE(fid, name)
+);
 
 CREATE TABLE IF NOT EXISTS notification_webhook (
   id          int NOT NULL auto_increment PRIMARY KEY,

@@ -46,7 +46,7 @@
     "jsonwebtoken": "^8.0.1",
     "keycloak-admin": "https://github.com/amazeeio/keycloak-admin.git#bd015d2e34634f262c0827f00620657427e3c252",
     "keycloak-connect": "^5.0.0",
-    "knex": "^0.20.2",
+    "knex": "^v0.95",
     "mariadb": "^2.5.2",
     "moment": "^2.24.0",
     "morgan": "^1.9.0",

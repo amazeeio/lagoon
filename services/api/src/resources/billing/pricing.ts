@@ -86,8 +86,8 @@ export const GBP = {
       devSitePerHour: 0.0116,
     },
     HIGH: {
-      hitCosts: [0.0, 0.0003, 0.00014, 0.00006],
-      hitBase: 80.0,
+      hitCosts: [0.0, 0.00024, 0.000112, 0.000048],
+      hitBase: 200.0,
       prodSitePerHour: 0.1111,
       devSitePerHour: 0.0347,
     },

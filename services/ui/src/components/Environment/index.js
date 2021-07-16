@@ -17,7 +17,7 @@ const Environment = ({ environment }) => {
   const gitUrlParsed = giturlparse(environment.project.gitUrl);
   const gitBranchLink = `${gitUrlParsed.resource}/${
     gitUrlParsed.full_name
-  }/tree/${environment.name}`;
+  }/${environment.deployType === 'branch' ? `tree/${environment.name}` : `pull/${environment.name.replace('pr-', '')}`}`;
 
   return (
     <div className="details">

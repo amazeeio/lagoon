@@ -61,6 +61,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: lagoon-env
+            - secretRef:
+                name: lagoon-external-secrets
           resources:
             {{- toYaml .Values.resources.nginx | nindent 12 }}
 

@@ -1433,6 +1433,12 @@ if [ ! -z "$LAGOON_ENVIRONMENT_VARIABLES" ]; then
 fi
 set -x
 
+set +x # don't list secrets in build logs
+# Create a Secret object containing any external secrets
+kubectl -n "${NAMESPACE}" create secret generic lagoon-external-secrets --dry-run=client -o json | kubectl -n "${NAMESPACE}" apply -f-
+kubectl -n "${NAMESPACE}" patch secret lagoon-external-secrets -p '[{"op":"replace","path":"/data","value":'"$(lagoon-ges || (echo "couldn't get external secret" > /dev/stderr; kill $$))"'}]' --type json
+set -x
+
 if [ "$BUILD_TYPE" == "pullrequest" ]; then
   kubectl patch --insecure-skip-tls-verify \
     -n ${NAMESPACE} \

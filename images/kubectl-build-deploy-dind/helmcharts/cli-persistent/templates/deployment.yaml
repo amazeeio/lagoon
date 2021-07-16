@@ -56,6 +56,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: lagoon-env
+            - secretRef:
+                name: lagoon-external-secrets
           volumeMounts:
             - mountPath: /var/run/secrets/lagoon/sshkey/
               name: lagoon-sshkey

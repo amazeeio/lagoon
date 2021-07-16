@@ -42,6 +42,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: lagoon-env
+            - secretRef:
+                name: lagoon-external-secrets
           ports:
             - name: 6379-tcp
               containerPort: 6379

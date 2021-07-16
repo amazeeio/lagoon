@@ -39,6 +39,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: lagoon-env
+            - secretRef:
+                name: lagoon-external-secrets
           ports:
             - name: 9600-tcp
               containerPort: 9600

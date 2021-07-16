@@ -1,0 +1,28 @@
+---
+- include: features/api-token.yaml
+  vars:
+    testname: "API TOKEN"
+
+- include: api/add-project.yaml
+  vars:
+    project: ci-features-external-secrets-{{ cluster_type }}
+    git_repo_name: features.git
+    git_url: "{{ localgit_url }}/{{ git_repo_name }}"
+
+- include: api/add-project-variable.yaml
+  vars:
+    project: ci-features-external-secrets-{{ cluster_type }}
+    envName: "LAGOON_EXTERNAL_SECRETS_MOCK_BACKEND"
+    envValue: "DOES_NOT_MATTER"
+    envScope: "BUILD"
+
+- include: features/external-secrets.yaml
+  vars:
+    testname: "LAGOON EXTERNAL SECRETS {{ cluster_type|upper }}"
+    git_repo_name: features.git
+    project: ci-features-external-secrets-{{ cluster_type }}
+    branch: external-secrets
+
+- include: api/delete-project.yaml
+  vars:
+    project: ci-features-external-secrets-{{ cluster_type }}

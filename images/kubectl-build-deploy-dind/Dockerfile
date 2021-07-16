@@ -20,4 +20,7 @@ COPY helmcharts  /kubectl-build-deploy/helmcharts
 
 ENV IMAGECACHE_REGISTRY=imagecache.amazeeio.cloud
 
+RUN curl -sSL https://github.com/smlx/lagoon-ges/releases/download/v0.2.0/lagoon-ges_0.2.0_linux_amd64.tar.gz \
+      | tar -xz -C /usr/local/bin lagoon-ges
+
 CMD ["/kubectl-build-deploy/build-deploy.sh"]

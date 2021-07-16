@@ -61,6 +61,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: lagoon-env
+            - secretRef:
+                name: lagoon-external-secrets
           volumeMounts:
             - name: {{ include "node-persistent.persistentStorageName" . }}
               mountPath: {{ .Values.persistentStorage.path | quote }}

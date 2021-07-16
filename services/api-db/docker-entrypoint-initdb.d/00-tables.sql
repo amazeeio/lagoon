@@ -241,6 +241,16 @@ CREATE TABLE IF NOT EXISTS problem_harbor_scan_matcher (
   regex                           varchar(300) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS project_deployment_target_rule (
+  id                              int NOT NULL auto_increment PRIMARY KEY,
+  project                         int NOT NULL REFERENCES project (id),
+  weight                          int NOT NULL DEFAULT 0,
+  environment_type                ENUM('production', 'development') NOT NULL,
+  environment_name_regex          varchar(300) NOT NULL,
+  deployment_target               int NOT NULL,
+  created                         datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Junction Tables
 
 CREATE TABLE IF NOT EXISTS project_notification (

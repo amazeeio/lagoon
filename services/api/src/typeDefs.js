@@ -304,6 +304,12 @@ const typeDefs = gql`
     uptimeRobotStatusPageId: String
   }
 
+  interface DeploymentTargetInterface {
+    id: Int
+    name: String
+    created: String
+  }
+
   type Openshift {
     id: Int
     name: String
@@ -381,6 +387,18 @@ const typeDefs = gql`
   }
 
   union Notification = NotificationRocketChat | NotificationSlack | NotificationMicrosoftTeams | NotificationEmail | NotificationWebhook
+
+  """
+  You can define a cluster for production and one for development environment types and/or the environment name.
+  precedence matters
+  """
+  type DeploymentTargetRule {
+    id: Int
+    environmentType: EnvType
+    environmentNameRegex: String
+    deploymentTarget: DeploymentTargetInterface
+    weight: Int
+  }
 
   """
   Lagoon Project (like a git repository)
@@ -513,6 +531,7 @@ const typeDefs = gql`
     Pattern of OpenShift Project/Namespace that should be generated, default: \`$\{project}-$\{environmentname}\`
     """
     openshiftProjectPattern: String
+    deploymentTargetRules: [DeploymentTargetRule]
     """
     Reference to Kubernetes Object this Project should be deployed to
     """
@@ -905,6 +924,11 @@ const typeDefs = gql`
     id: Int!
   }
 
+  input DeploymentTargetInput {
+    id: Int
+    name: String
+  }
+
   input AddProjectInput {
     id: Int
     name: String!
@@ -934,6 +958,31 @@ const typeDefs = gql`
     privateKey: String
     problemsUi: Int
     factsUi: Int
+  }
+
+  input AddProjectDeploymentTargetRuleInput {
+    project: ProjectInput!
+    environmentType: EnvType!
+    environmentNameRegex: String!
+    deploymentTarget: DeploymentTargetInput!
+    weight: Int
+  }
+
+  input ProjectDeploymentTargetRulePatchInput {
+    project: ProjectInput!
+    environmentType: EnvType
+    environmentNameRegex: String
+    deploymentTarget: DeploymentTargetInput!
+    weight: Int
+  }
+
+  input UpdateProjectDeploymentTargetRuleInput {
+    id: Int!
+    patch: ProjectDeploymentTargetRulePatchInput!
+  }
+
+  input DeleteProjectDeploymentTargetRuleInput {
+    id: Int!
   }
 
   input AddEnvironmentInput {
@@ -1688,6 +1737,9 @@ const typeDefs = gql`
     updateBillingModifier(input: UpdateBillingModifierInput!): BillingModifier
     deleteBillingModifier(input: DeleteBillingModifierInput!): String
     deleteAllBillingModifiersByBillingGroup(input: GroupInput!): String
+    addProjectDeploymentTargetRule(input: AddProjectDeploymentTargetRuleInput): DeploymentTargetRule
+    updateProjectDeploymentTargetRule(input: UpdateProjectDeploymentTargetRuleInput): DeploymentTargetRule
+    deleteProjectDeploymentTargetRule(input: DeleteProjectDeploymentTargetRuleInput): String
   }
 
   type Subscription {

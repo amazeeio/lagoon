@@ -344,6 +344,14 @@ export const addProject = async (
     project.id
   );
 
+  //We also want to create a second group corresponding directly to the project-id
+  // This is what'll be used for
+  OpendistroSecurityOperations(sqlClientPool, models.GroupModel).syncGroup(
+    `p-${project.id}`,
+    project.id
+  );
+
+
   // Find or create a user that has the public key linked to them
   const userRows = await query(
     sqlClientPool,

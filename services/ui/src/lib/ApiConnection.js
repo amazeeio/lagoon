@@ -21,6 +21,7 @@ const ApiConnection = ({ children }) => (
         return (
           <ErrorPage
             statusCode={401}
+            title="Login Required"
             errorMessage="Please wait while we log you in..."
           />
         );

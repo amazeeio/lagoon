@@ -25,7 +25,7 @@ export default class Error extends React.Component {
 
   render() {
     const { statusCode, errorMessage } = this.props;
-    const title = statusCodes[statusCode] || 'An unexpected error has occurred';
+    const title = this.props.title || statusCodes[statusCode] || 'An unexpected error has occurred';
 
     return (
       <StatusLayout>

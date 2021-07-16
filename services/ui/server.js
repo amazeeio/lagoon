@@ -14,6 +14,13 @@ app
   .then(() => {
     const server = express();
 
+    server.use((req, res, next) => {
+      // Express middleware to add security headers to the responses.
+      res.header('X-Content-Type-Options', 'nosniff');
+      res.header('X-Frame-Options', 'SameOrigin');
+      next()
+    })
+
     // Handle favicon requests that ignore our HTML meta tags.
     server.get('/favicon.ico', (req, res) =>
       res
